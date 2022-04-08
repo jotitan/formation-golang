@@ -15,4 +15,4 @@ L'objectif est d'initialiser un projet, de créer un fonction qui va afficher le
 
 Essayer d'améliorer votre code en sortant le traitement de la méthode main.
 
-#### Lien
+#### Liens
