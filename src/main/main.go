@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"formation-go/task"
+)
 
 func main() {
-	fmt.Println("I am a new Gopher")
+	task.Print{Message: "I am a new Gopher"}.Do()
 }

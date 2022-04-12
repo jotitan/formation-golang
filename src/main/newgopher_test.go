@@ -7,5 +7,6 @@ import (
 )
 
 func TestGopherMessage(t *testing.T) {
+	main()
 	assert.True(t, logger.Log.CheckMessage("I am a new Gopher"))
 }
