@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"formation-go/logger"
+)
 
 func main() {
-	fmt.Println("I am a new Gopher")
+	logger.Log.Println("I am a new Gopher")
 }

@@ -10,7 +10,27 @@ import (
 	"strings"
 )
 
-func openImage(path string) (image.Image, error) {
+type LocalResize struct{}
+
+func (lr LocalResize) Resize(from, to string, height, width uint) error {
+	img, err := lr.open(from)
+	if err != nil {
+		return err
+	}
+	resizeImage, _, _ := lr.doResize(img, width, height)
+	return lr.save(resizeImage, to)
+}
+
+func (lr LocalResize) save(img image.Image, path string) error {
+	if f, err := os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_RDWR, os.ModePerm); err == nil {
+		defer f.Close()
+		return jpeg.Encode(f, img, &(jpeg.Options{75}))
+	} else {
+		return err
+	}
+}
+
+func (lr LocalResize) open(path string) (image.Image, error) {
 	if f, err := os.Open(path); err == nil {
 		defer f.Close()
 		var img image.Image
@@ -36,7 +56,7 @@ func openImage(path string) (image.Image, error) {
 	}
 }
 
-func resizeImage(img image.Image, width, height uint) (image.Image, uint, uint) {
+func (lr LocalResize) doResize(img image.Image, width, height uint) (image.Image, uint, uint) {
 	x, y := float32(img.Bounds().Size().X), float32(img.Bounds().Size().Y)
 	if float32(height) > y || float32(width) > x {
 		return img, uint(x), uint(y)
