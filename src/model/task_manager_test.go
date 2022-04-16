@@ -1,4 +1,4 @@
-package task
+package model
 
 import "testing"
 import "github.com/stretchr/testify/assert"
