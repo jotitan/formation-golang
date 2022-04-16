@@ -7,6 +7,7 @@ import (
 
 type Task interface {
 	Do() bool
+	GetId() int
 }
 
 type Resize struct {
@@ -14,6 +15,7 @@ type Resize struct {
 	Height     int
 	OriginPath string
 	TargetPath string
+	Id         int
 }
 
 func (r Resize) Do() bool {
@@ -21,11 +23,20 @@ func (r Resize) Do() bool {
 	return true
 }
 
+func (r Resize) GetId() int {
+	return r.Id
+}
+
 type Print struct {
 	Message string
+	Id      int
 }
 
 func (p Print) Do() bool {
 	logger.Log.Println(p.Message)
 	return true
+}
+
+func (p Print) GetId() int {
+	return p.Id
 }
