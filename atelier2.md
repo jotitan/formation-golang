@@ -16,7 +16,7 @@
 * Mocker la méthode Do pour le traitement d'image en utilisant le logger pour afficher "Run resize from, to, width, height". Exemple "Run resize img.jpg img2.jpg 400px 200px"
 
 Manipulation de tableau :
-* Implémenter les méthodes de la structure Taskmanager
-* Lancer le test taskmanager_test.go
+* Implémenter les méthodes de la structure task.Manager
+* Lancer le test task_manager_test.go
 
 #### Aide
