@@ -3,16 +3,24 @@
 
 **Branche Atelier 2**
 
-#### Description
+#### Objectifs
 
-L'objectif est de modéliser les structure de données pour permettre le redimensionnement d'image.
-Les interfaces vont nous permettre d'abstraire le mécanisme de traitement d'image
+* Modéliser les structure de données pour permettre le redimensionnement d'image
+* Utiliser des interfaces pour représenter une tâche pouvant s'exécuter
 
 #### Etapes
 
-* Modifier l'exemple précédent pour utiliser le logger et lancer le test newgopher
-* Modéliser une tâche permettant de traiter une image : largeur, longueur, chemin image source et chemin image destination
+* Modifier l'exemple précédent pour utiliser le package **logger** et lancer le test newgopher_test.go
+* Créer une structure présentant une tâche de traitement d'une image : largeur, longueur, chemin image source et chemin image destination
 * Utiliser une interface représentant une tâche avec une méthode **Do()**
 * Mocker la méthode Do pour le traitement d'image en utilisant le logger pour afficher "Run resize from, to, width, height". Exemple "Run resize img.jpg img2.jpg 400px 200px"
 
-#### Liens
+Manipulation de tableau :
+* Implémenter les méthodes de la structure task.Manager
+  * Attention, vous devez trouver une solution pour identifier de manière unique vos tâches
+  * Certaines fonctions n'ont aucun intérêt sinon de manipuler un tableau
+* Lancer le test task_manager_test.go
+
+#### Aide
+
+* [reflect.TypeOf()](https://pkg.go.dev/reflect#TypeOf) permet de connaître le type d'une structure
