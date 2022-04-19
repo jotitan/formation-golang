@@ -10,9 +10,7 @@ func NewManager() *Manager {
 func (m *Manager) Add(task Task) {
 	// Write code here
 }
-func (m *Manager) Remove(task Task) {
-	// Write code here
-}
+
 func (m *Manager) GetAll() []Task {
 	// Write code here
 	return nil

@@ -2,14 +2,16 @@ package model
 
 import (
 	"formation-go/logger"
-	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestPrint(t *testing.T) {
 	message := "Hello my friend"
 	Print{message}.Do()
-	assert.True(t, logger.Log.CheckMessage(message))
+
+	if !logger.Log.CheckMessage(message) {
+		t.Error("Must found message", message)
+	}
 }
 
 func TestResize(t *testing.T) {
@@ -20,5 +22,8 @@ func TestResize(t *testing.T) {
 		TargetPath: "/home/photo_resize.jpg",
 	}
 	resize.Do()
-	assert.True(t, logger.Log.CheckMessage("Run resize /home/photo.jpg, /home/photo_resize.jpg, 600px, 400px"))
+	messageToFound := "Run resize /home/photo.jpg, /home/photo_resize.jpg, 600px, 400px"
+	if !logger.Log.CheckMessage(messageToFound) {
+		t.Error("Must found message", messageToFound)
+	}
 }
