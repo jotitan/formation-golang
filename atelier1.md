@@ -1,18 +1,21 @@
 # Atelier 1
 ### Création de projet
 
-#### Description
+#### Objectifs
 
-L'objectif est d'initialiser un projet, de créer un fonction qui va afficher le texte  _"I am a new Gopher"_
+* Créer une première fonction qui va afficher le texte  _"I am a new Gopher"_
 
 #### Etapes
 
-* Utiliser la commande go mod pour initialiser le projet
+**Branche atelier1**
+
 * Créer un package main
 * Créer un fichier avec une fonction main
+* Lancer le code
 
-#### Bonus
+#### Aide
 
-Essayer d'améliorer votre code en sortant le traitement de la méthode main.
-
-#### Lien
+* Executer du code :
+```bash
+go run monfichier.go
+```
