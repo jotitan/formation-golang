@@ -17,7 +17,7 @@
 
 Manipulation de tableau :
 * Implémenter les méthodes de la structure task.Manager
-  * Attention, vous devez trouver une solution pour identifier de manière unique vos tâches
+  * Expliquer les méthodes manager.NextId() et task.GetId()
   * Certaines fonctions n'ont aucun intérêt sinon de manipuler un tableau 
 * Lancer le test task_manager_test.go
 
