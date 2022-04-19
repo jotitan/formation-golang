@@ -24,3 +24,7 @@ func (l *Logger) CheckMessage(message string) bool {
 	}
 	return false
 }
+
+func Toto() string {
+	return "toto"
+}
