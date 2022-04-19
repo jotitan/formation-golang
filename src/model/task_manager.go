@@ -5,17 +5,16 @@ import (
 )
 
 type Manager struct {
-	tasks   []Task
-	counter int
+	tasks []Task
 }
 
 func NewManager() *Manager {
-	return &Manager{make([]Task, 0), 0}
+	return &Manager{make([]Task, 0)}
 }
 
 func (m *Manager) NextId() int {
-	m.counter++
-	return m.counter
+	// Write code here
+	return 0
 }
 
 func (m *Manager) Add(task Task) Task {
