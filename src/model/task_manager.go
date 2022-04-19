@@ -25,7 +25,7 @@ func (m *Manager) Add(task Task) Task {
 func (m *Manager) Remove(task Task) {
 	foundPosition := -1
 	for pos, t := range m.tasks {
-		if t.GetId() == task.GetId() {
+		if t.Id() == task.Id() {
 			foundPosition = pos
 			break
 		}

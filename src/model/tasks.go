@@ -7,7 +7,7 @@ import (
 
 type Task interface {
 	Do() bool
-	GetId() int
+	Id() int
 }
 
 type Resize struct {
@@ -15,7 +15,7 @@ type Resize struct {
 	Height     int
 	OriginPath string
 	TargetPath string
-	Id         int
+	Uuid       int
 }
 
 func (r Resize) Do() bool {
@@ -23,13 +23,14 @@ func (r Resize) Do() bool {
 	return true
 }
 
-func (r Resize) GetId() int {
-	return r.Id
+//Id return unique id of task
+func (r Resize) Id() int {
+	return r.Uuid
 }
 
 type Print struct {
 	Message string
-	Id      int
+	Uuid    int
 }
 
 func (p Print) Do() bool {
@@ -37,6 +38,7 @@ func (p Print) Do() bool {
 	return true
 }
 
-func (p Print) GetId() int {
-	return p.Id
+//Id return unique id of task
+func (p Print) Id() int {
+	return p.Uuid
 }
