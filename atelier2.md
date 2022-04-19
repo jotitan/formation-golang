@@ -29,6 +29,7 @@ Nous allons également ajouter la notion de suppression de tâche au taskmanager
 * Expliquer l'utilisation des méthodes NextId du manager
 * Implémenter la méthode manager.NextId qui renvoie un identifiant unique 
 * Implémenter la méthode Remove du TaskManager et lancer les tests de taskmanager_test.go
+* Modifier les tâches pour ne pas exposer 
 
 
 #### Aide
@@ -37,3 +38,5 @@ Nous allons également ajouter la notion de suppression de tâche au taskmanager
 go mod init project_name 
 ```
 * [reflect.TypeOf()](https://pkg.go.dev/reflect#TypeOf) permet de connaître le type d'une structure
+* Pour ne pas exposer le détail d'une tache, on peut créer une fonction qui créée la tâche, NewPrint par exemple, et on change la visibilité de Print
+* Pour rappel, quand le nom d'une structure commence par une majuscule, elle est publique, sinon privée
