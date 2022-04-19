@@ -5,6 +5,7 @@
 
 #### Objectifs
 
+* Initialiser un projet
 * Modéliser les structure de données pour permettre le redimensionnement d'image
 * Utiliser des interfaces pour représenter une tâche pouvant s'exécuter
 
