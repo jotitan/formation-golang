@@ -10,35 +10,51 @@ type Task interface {
 	Id() int
 }
 
-type Resize struct {
-	Width      int
-	Height     int
-	OriginPath string
-	TargetPath string
-	Uuid       int
+type resize struct {
+	width      int
+	height     int
+	originPath string
+	targetPath string
+	uuid       int
 }
 
-func (r Resize) Do() bool {
-	logger.Log.Println(fmt.Sprintf("Run resize %s, %s, %dpx, %dpx", r.OriginPath, r.TargetPath, r.Height, r.Width))
+func NewResize(originalPath, targetPath string, height, width, id int) Task {
+	return resize{
+		originPath: originalPath,
+		targetPath: targetPath,
+		height:     height,
+		width:      width,
+		uuid:       id}
+}
+
+func (r resize) Do() bool {
+	logger.Log.Println(fmt.Sprintf("Run resize %s, %s, %dpx, %dpx", r.originPath, r.targetPath, r.height, r.width))
 	return true
 }
 
 //Id return unique id of task
-func (r Resize) Id() int {
-	return r.Uuid
+func (r resize) Id() int {
+	return r.uuid
 }
 
-type Print struct {
-	Message string
-	Uuid    int
+func NewPrint(message string, id int) Task {
+	return print{
+		message: message,
+		uuid:    id,
+	}
 }
 
-func (p Print) Do() bool {
-	logger.Log.Println(p.Message)
+type print struct {
+	message string
+	uuid    int
+}
+
+func (p print) Do() bool {
+	logger.Log.Println(p.message)
 	return true
 }
 
 //Id return unique id of task
-func (p Print) Id() int {
-	return p.Uuid
+func (p print) Id() int {
+	return p.uuid
 }

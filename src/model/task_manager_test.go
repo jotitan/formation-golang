@@ -10,11 +10,11 @@ func TestManager(t *testing.T) {
 		t.Error("Must found 0 but found", nb)
 	}
 
-	manager.Add(Print{})
+	manager.Add(NewPrint("", 0))
 	if nb := manager.Size(); nb != 1 {
 		t.Error("Must found 1 but found", nb)
 	}
-	manager.Add(Print{})
+	manager.Add(NewPrint("", 0))
 	if nb := manager.Size(); nb != 2 {
 		t.Error("Must found 2 but found", nb)
 	}
@@ -23,10 +23,10 @@ func TestManager(t *testing.T) {
 	if nb := len(groups); nb != 1 {
 		t.Error("Must found 1 but found", nb)
 	}
-	if nb := len(groups["Print"]); nb != 2 {
+	if nb := len(groups["print"]); nb != 2 {
 		t.Error("Must found 2 but found", nb)
 	}
-	manager.Add(Resize{})
+	manager.Add(NewResize("", "", 0, 0, 0))
 	if nb := manager.Size(); nb != 3 {
 		t.Error("Must found 3 but found", nb)
 	}
@@ -39,8 +39,8 @@ func TestManager(t *testing.T) {
 
 func TestRemoveMissingElement(t *testing.T) {
 	manager := NewManager()
-	task1 := Print{Uuid: manager.NextId()}
-	task2 := Print{Uuid: manager.NextId()}
+	task1 := NewPrint("", manager.NextId())
+	task2 := NewPrint("", manager.NextId())
 
 	if nb := manager.Size(); nb != 0 {
 		t.Error("Must found 0, but found", nb)
@@ -55,14 +55,13 @@ func TestRemoveMissingElement(t *testing.T) {
 	if nb := manager.Size(); nb != 1 {
 		t.Error("Must found 1, but found", nb)
 	}
-
 }
 
 func TestSimpleRemove(t *testing.T) {
 	manager := NewManager()
-	task1 := Print{Uuid: manager.NextId()}
-	task2 := Print{Uuid: manager.NextId()}
-	task3 := Print{Uuid: manager.NextId()}
+	task1 := NewPrint("", manager.NextId())
+	task2 := NewPrint("", manager.NextId())
+	task3 := NewPrint("", manager.NextId())
 
 	manager.Add(task1)
 	manager.Add(task2)
@@ -83,10 +82,10 @@ func TestSimpleRemove(t *testing.T) {
 
 func TestComplexRemove(t *testing.T) {
 	manager := NewManager()
-	task1 := Print{Uuid: manager.NextId()}
-	task2 := Print{Uuid: manager.NextId()}
-	task3 := Print{Uuid: manager.NextId()}
-	task4 := Print{Uuid: manager.NextId()}
+	task1 := NewPrint("", manager.NextId())
+	task2 := NewPrint("", manager.NextId())
+	task3 := NewPrint("", manager.NextId())
+	task4 := NewPrint("", manager.NextId())
 
 	manager.Add(task1)
 	manager.Add(task2)
