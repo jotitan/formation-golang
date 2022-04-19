@@ -29,7 +29,3 @@ Nous allons également ajouter la notion de suppression de tâche au taskmanager
 
 
 #### Aide
-
-* Commande go mod
-
-* Découper en deux
