@@ -7,6 +7,8 @@
 
 #### Etapes
 
+**Branche atelier1**
+
 * Créer un package main
 * Créer un fichier avec une fonction main
 * Lancer le code
