@@ -7,7 +7,7 @@ import (
 
 func TestPrint(t *testing.T) {
 	message := "Hello Golfi"
-	Print{message}.Do()
+	Print{Message: message}.Do()
 
 	if !logger.Log.CheckMessage(message) {
 		t.Error("Must found message", message)
