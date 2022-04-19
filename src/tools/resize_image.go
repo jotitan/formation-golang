@@ -70,6 +70,6 @@ func (lr LocalResize) doResize(img image.Image, width, height uint) (image.Image
 		height = uint((float32(width) / x) * y)
 	}
 	//return resizer.Resize(width, height, img, resizer.Bicubic), width, height
-	// TODO
+	// TODO call external API
 	return nil, 0, 0
 }
