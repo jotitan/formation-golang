@@ -23,23 +23,7 @@ func (m *Manager) Add(task Task) Task {
 	return task
 }
 func (m *Manager) Remove(task Task) {
-	foundPosition := -1
-	for pos, t := range m.tasks {
-		if t.Id() == task.Id() {
-			foundPosition = pos
-			break
-		}
-	}
-	switch foundPosition {
-	case -1:
-		break
-	case 0:
-		m.tasks = m.tasks[1:]
-	case len(m.tasks) - 1:
-		m.tasks = m.tasks[0 : len(m.tasks)-1]
-	default:
-		m.tasks = append(m.tasks[0:foundPosition], m.tasks[foundPosition+1:]...)
-	}
+	// write code here
 }
 
 func (m *Manager) GetAll() []Task {
