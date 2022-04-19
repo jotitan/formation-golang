@@ -1,6 +1,13 @@
 package model
 
-type Task interface{}
+type Task interface {
+	// Write code here
+}
 
-type Print struct{}
-type Resize struct{}
+type Print struct {
+	// Write code here
+}
+
+type Resize struct {
+	// Write code here
+}
