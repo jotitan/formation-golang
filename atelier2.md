@@ -1,17 +1,15 @@
 # Atelier 2
 ### Structure de données et interface
 
-**Branche Atelier 2**
-
 #### Objectifs
 
-* Initialiser un projet
 * Modéliser les structure de données pour permettre le redimensionnement d'image
 * Utiliser des interfaces pour représenter une tâche pouvant s'exécuter
 
 #### Etapes
 
-* Utiliser la commande go mod pour initialiser le projet
+##### Etape 1 => Branche atelier2.0
+
 * Modifier l'exemple précédent pour utiliser le package **logger** et lancer le test newgopher_test.go
 * Créer une structure présentant une tâche de traitement d'une image : largeur, longueur, chemin image source et chemin image destination
 * Utiliser une interface représentant une tâche avec une méthode **Do()**
@@ -21,6 +19,17 @@ Manipulation de tableau :
 * Implémenter les méthodes de la structure Taskmanager
 * Lancer le test taskmanager_test.go
 
+##### Etape 2 => Branche atelier2.1
+
+Le code que nous avons écrit est bien mais il expose trop l'implémentation de nos tâches alors que nous souhaiterions dissimuler cela.
+Nous allons également ajouter la notion de suppression de tâche au taskmanager.
+
+* Expliquer l'utilisation des méthodes NextId du manager
+* Implémenter la méthode Remove du TaskManager et lancer les tests de taskmanager_test.go
+
+
 #### Aide
 
 * Commande go mod
+
+* Découper en deux
