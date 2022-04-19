@@ -10,6 +10,7 @@
 
 #### Etapes
 
+* Utiliser la commande go mod pour initialiser le projet
 * Modifier l'exemple précédent pour utiliser le package **logger** et lancer le test newgopher_test.go
 * Créer une structure présentant une tâche de traitement d'une image : largeur, longueur, chemin image source et chemin image destination
 * Utiliser une interface représentant une tâche avec une méthode **Do()**
@@ -20,3 +21,5 @@ Manipulation de tableau :
 * Lancer le test taskmanager_test.go
 
 #### Aide
+
+* Commande go mod

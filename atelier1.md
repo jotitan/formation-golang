@@ -8,7 +8,6 @@
 
 #### Etapes
 
-* Utiliser la commande go mod pour initialiser le projet
 * Créer un package main
 * Créer un fichier _main.go_ avec une fonction main
 * Afficher le texte "I am a new Gopher"
