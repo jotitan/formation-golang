@@ -23,13 +23,12 @@ Manipulation de tableau :
 
 ##### Etape 2 => Branche atelier2.1
 
-Le code que nous avons écrit est bien mais il expose trop l'implémentation de nos tâches alors que nous souhaiterions dissimuler cela.
+Le code que nous avons écrit est bien mais il expose trop l'implémentation de nos tâches alors que nous souhaiterions dissimuler cela.  
 Nous allons également ajouter la notion de suppression de tâche au taskmanager.
 
-* Expliquer l'utilisation des méthodes NextId du manager
-* Implémenter la méthode manager.NextId qui renvoie un identifiant unique 
+* Expliquer l'intérêt de la méthode NextId du manager et l'implémenter.
 * Implémenter la méthode Remove du TaskManager et lancer les tests de taskmanager_test.go
-* Modifier les tâches pour ne pas exposer 
+* Modifier les tâches Print et Resize pour ne pas exposer l'implémentation 
 
 
 #### Aide
