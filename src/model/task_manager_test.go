@@ -1,40 +1,30 @@
 package model
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestManager(t *testing.T) {
 	manager := NewManager()
-	if nb := manager.Size(); nb != 0 {
-		t.Error("Must found 0 but found", nb)
-	}
+	assert.Equal(t, 0, manager.Size(), "Must found 0")
 
 	manager.Add(NewPrint("", 0))
-	if nb := manager.Size(); nb != 1 {
-		t.Error("Must found 1 but found", nb)
-	}
+	assert.Equal(t, 1, manager.Size(), "Must found 1")
+
 	manager.Add(NewPrint("", 0))
-	if nb := manager.Size(); nb != 2 {
-		t.Error("Must found 2 but found", nb)
-	}
+	assert.Equal(t, 2, manager.Size(), "Must found 2")
 
 	groups := manager.GroupByType()
-	if nb := len(groups); nb != 1 {
-		t.Error("Must found 1 but found", nb)
-	}
-	if nb := len(groups["print"]); nb != 2 {
-		t.Error("Must found 2 but found", nb)
-	}
+	assert.Equal(t, 1, len(groups), "Must found 1")
+
+	assert.Equal(t, 2, len(groups["print"]), "Must found 2")
+
 	manager.Add(NewResize("", "", 0, 0, 0))
-	if nb := manager.Size(); nb != 3 {
-		t.Error("Must found 3 but found", nb)
-	}
+	assert.Equal(t, 3, manager.Size(), "Must found 3")
 
 	groups = manager.GroupByType()
-	if nb := len(groups); nb != 2 {
-		t.Error("Must found 2 but found", nb)
-	}
+	assert.Equal(t, 2, len(groups), "Must found 2")
 }
 
 func TestRemoveMissingElement(t *testing.T) {

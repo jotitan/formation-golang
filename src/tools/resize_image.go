@@ -2,6 +2,7 @@ package tools
 
 import (
 	"errors"
+	"github.com/nfnt/resize"
 	"image"
 	"image/jpeg"
 	"image/png"
@@ -69,7 +70,5 @@ func (lr LocalResize) doResize(img image.Image, width, height uint) (image.Image
 	case height == 0:
 		height = uint((float32(width) / x) * y)
 	}
-	//return resizer.Resize(width, height, img, resizer.Bicubic), width, height
-	// TODO call external API
-	return nil, 0, 0
+	return resize.Resize(width, height, img, resize.Bicubic), width, height
 }
