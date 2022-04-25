@@ -17,6 +17,7 @@ Utilisation de librairies externes :
 * Modifier la fonction de test TestManager pour utiliser la librairie d'assertion testify
 * Appeler [la librairie de redimensionnement](https://github.com/nfnt/resize) d'image dans resize_image.go
 * Tester la fonction Resize à partir du main
+* Faire un test unitaire pour tester automatiquement que de la réduction de la photo **/resources/photo_test.jpg** fonctionne
 
 #### Aide 
 * [Go module](https://go.dev/ref/mod#go-get)
