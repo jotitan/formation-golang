@@ -3,5 +3,17 @@
 
 **Branche Atelier 4**
 
-Créer des _tests unitaires_ sur toutes nos fonctions de base.
-Utilisation des _mocks_ pour simuler un traitement à appeler
+#### Objectifs
+
+* simplifier l'écriture de test unitaire avec testify
+
+#### Etapes
+
+* Ajouter la dépendance _github.com/stretchr/testify_
+* Modifier la fonction de test TestManager pour utiliser la librairie d'assertion testify
+* Faire un test unitaire pour tester automatiquement que de la réduction de la photo **/resources/photo_test.jpg** fonctionne
+
+#### Aide
+
+* [Créer un répertoire temporaire](https://pkg.go.dev/io/ioutil#TempDir)
+* [Lire le contenu d'un fichier](https://pkg.go.dev/io/ioutil#ReadFile)
