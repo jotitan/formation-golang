@@ -5,19 +5,15 @@
 
 #### Objectifs
 
-Utilisation de librairies externes : 
-* pour redimensionner nos images
-* simplifier l'écriture de test unitaire avec testify
+Utilisation d'une librairie externe pour redimensionner nos images
+Savoir utiliser go mod
 
 #### Etapes
 
-* Utiliser go mod pour ajouter les dépendances suivantes : 
-  * github.com/nfnt/resize
-  * github.com/stretchr/testify
-* Modifier la fonction de test TestManager pour utiliser la librairie d'assertion testify
+* Ajouter la dépendance _github.com/nfnt/resize_
 * Appeler [la librairie de redimensionnement](https://github.com/nfnt/resize) d'image dans resize_image.go
+* Implémenter la fonction Do de Resize pour utiliser cette implémentation
 * Tester la fonction Resize à partir du main
-* Faire un test unitaire pour tester automatiquement que de la réduction de la photo **/resources/photo_test.jpg** fonctionne
 
-#### Aide 
+#### Aide
 * [Go module](https://go.dev/ref/mod#go-get)
