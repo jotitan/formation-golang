@@ -5,8 +5,8 @@
 
 #### Objectifs
 
-Savoir créer et appeler des API Rest avec l'API standard
-Savoir utiliser la librairie Gin Gonic pour simplifier le développement d'API Rest
+* Savoir créer et appeler des API Rest avec l'API standard
+* Savoir utiliser la librairie Gin Gonic pour simplifier le développement d'API Rest
 
 #### Etapes
 
