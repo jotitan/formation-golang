@@ -10,7 +10,7 @@ func TestPrint(t *testing.T) {
 	Print{message}.Do()
 
 	if !logger.Log.CheckMessage(message) {
-		t.Error("Must found message", message)
+		t.Error("Must find message", message)
 	}
 }
 
@@ -24,6 +24,6 @@ func TestResize(t *testing.T) {
 	resize.Do()
 	messageToFound := "Run resize /home/photo.jpg, /home/photo_resize.jpg, 600px, 400px"
 	if !logger.Log.CheckMessage(messageToFound) {
-		t.Error("Must found message", messageToFound)
+		t.Error("Must find message", messageToFound)
 	}
 }
