@@ -9,3 +9,13 @@
 * [Atelier 5](atelier5.md)
 * [Atelier 6](atelier6.md)
 * [Atelier 7](atelier7.md)
+
+Architucture du projet
+
+```mermaid
+
+flowchart TD;
+
+A-->TODO
+
+```
