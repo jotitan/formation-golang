@@ -5,8 +5,8 @@
 
 #### Objectifs
 
-Utilisation d'une librairie externe pour redimensionner nos images
-Savoir utiliser go mod
+* Utilisation d'une librairie externe pour redimensionner nos images
+* Savoir utiliser go mod
 
 #### Etapes
 
