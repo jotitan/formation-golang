@@ -5,8 +5,8 @@
 
 #### Objectifs
 
-Savoir créer des API Rest
-Savoir appeler des API Rest
+Savoir créer et appeler des API Rest avec l'API standard
+Savoir utiliser la librairie Gin Gonic pour simplifier le développement d'API Rest
 
 #### Etapes
 
@@ -14,7 +14,7 @@ Savoir appeler des API Rest
 - Pour recevoir une tâche et la réaliser
 
 ```mermaid
-    flowchart TD;
+    flowchart LR;
     
     subgraph coordinator
     TaskManager
