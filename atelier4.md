@@ -17,3 +17,4 @@
 
 * [Créer un répertoire temporaire](https://pkg.go.dev/io/ioutil#TempDir)
 * [Lire le contenu d'un fichier](https://pkg.go.dev/io/ioutil#ReadFile)
+* Pour vérifier qu'une photo a été réduite, faite simple, comparer le poids de l'image avant / après
