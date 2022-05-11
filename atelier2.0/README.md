@@ -7,9 +7,9 @@
 * Modéliser les structure de données pour permettre le redimensionnement d'image
 * Utiliser des interfaces pour représenter une tâche pouvant s'exécuter
 
-#### Etapes
+Cet atelier se fait en deux étapes : atelier2.0 et atelier2.1
 
-##### Etape 1 => Branche atelier2.0
+#### Etape 1 => Branche atelier2.0
 
 * Initialiser les modules avec comme nom de projet "formation-go"
 * Modifier l'exemple de l'atelier 1 pour utiliser le package **logger** et lancer le test newgopher_test.go
@@ -20,16 +20,6 @@
 Manipulation de tableau :
 * Implémenter les méthodes de la structure Taskmanager
 * Lancer le test taskmanager_test.go
-
-##### Etape 2 => Branche atelier2.1
-
-Le code que nous avons écrit est bien mais il expose trop l'implémentation de nos tâches alors que nous souhaiterions dissimuler cela.  
-Nous allons également ajouter la notion de suppression de tâche au taskmanager.
-
-* Expliquer l'intérêt de la méthode NextId du manager et l'implémenter.
-* Implémenter la méthode Remove du TaskManager et lancer les tests de taskmanager_test.go
-* Modifier les tâches Print et Resize pour ne pas exposer l'implémentation
-
 
 #### Aide
 * Initialiser les modules dans un projet
