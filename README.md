@@ -1,9 +1,12 @@
 # Formation Golang
 
-7 ateliers à réaliser
+### Orgnisation des ateliers
+
+Il faut réaliser 7 ateliers se trouvant chacun dans un répertoire.
+Chaque atelier répertoire contient la correction du précédent atelier.
 
 * [Atelier 1](atelier1/README.md)
-* [Atelier 2](atelier2.0/README.md)
+* [Atelier 2](atelier2.0/README.md) : cet atelier se fait en deux parties. La seconde est [2.1](atelier2.1/README.md) 
 * [Atelier 3](atelier3/README.md)
 * [Atelier 4](atelier4/README.md)
 * [Atelier 5](atelier5.0/README.md)
