@@ -9,7 +9,7 @@
 
 Cet atelier se fait en deux étapes : atelier2.0 et atelier2.1
 
-#### Etape 1 => Branche atelier2.0
+#### Etape 1 => Répertoire atelier2.0
 
 * Initialiser les modules avec comme nom de projet "formation-go"
 * Modifier l'exemple de l'atelier 1 pour utiliser le package **logger** et lancer le test newgopher_test.go

@@ -23,5 +23,5 @@ go run monfichier.go
 
 * Builder du code :
 ```bash
-go build monfichier.go -o myexecutable
+go build -o myexecutable monfichier.go
 ```
