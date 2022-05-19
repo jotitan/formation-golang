@@ -16,6 +16,7 @@ Cet atelier se fait en deux étapes : atelier2.0 et atelier2.1
 * Créer une structure présentant une tâche de traitement d'une image : largeur, longueur, chemin image source et chemin image destination
 * Utiliser une interface représentant une tâche avec une méthode **Do()**
 * Mocker la méthode Do pour le traitement d'image en utilisant le logger pour afficher "Run resize from, to, width, height". Exemple "Run resize img.jpg img2.jpg 400px 200px"
+* Lancer les tests tasks_test.go
 
 Manipulation de tableau :
 * Implémenter les méthodes de la structure Taskmanager

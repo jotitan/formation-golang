@@ -6,7 +6,7 @@
 * [Atelier 2](atelier2.0/README.md)
 * [Atelier 3](atelier3/README.md)
 * [Atelier 4](atelier4/README.md)
-* [Atelier 5](atelier5/README.md)
+* [Atelier 5](atelier5.0/README.md)
 * [Atelier 6](atelier6/README.md)
 * [Atelier 7](atelier7/README.md)
 
