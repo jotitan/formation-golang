@@ -27,8 +27,6 @@ Les tâches :
 
 flowchart LR;
 
-
-
 subgraph atelier
     Coordinateur
     Coordinateur--"Execute tache"-->Executor1

@@ -10,12 +10,16 @@ type Task interface {
 	Id() int
 }
 
-type Resize struct {
+type resize struct {
 	Width      int
 	Height     int
 	OriginPath string
 	TargetPath string
 	Uuid       int
+}
+
+func NewResize(widht, height int, ath1, path2 string) Task {
+	return resize{}
 }
 
 func (r Resize) Do() bool {
