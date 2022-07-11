@@ -8,6 +8,7 @@ import (
 type Task interface {
 	Do() bool
 	Id() int
+	Type() string
 }
 
 type resize struct {
@@ -25,6 +26,10 @@ func NewResize(originalPath, targetPath string, height, width, id int) Task {
 		height:     height,
 		width:      width,
 		uuid:       id}
+}
+
+func (r resize) Type() string {
+	return "resize"
 }
 
 func (r resize) Do() bool {
@@ -47,6 +52,10 @@ func NewPrint(message string, id int) Task {
 type print struct {
 	message string
 	uuid    int
+}
+
+func (p print) Type() string {
+	return "print"
 }
 
 func (p print) Do() bool {

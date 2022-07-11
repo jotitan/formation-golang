@@ -16,7 +16,7 @@ Cet atelier se fait en deux étapes : atelier2.0 et atelier2.1
 * Initialiser les modules avec comme nom de projet "formation-go"
 * Modifier l'exemple de l'atelier 1 pour utiliser le package **logger** et lancer le test newgopher_test.go
 * Dans le package model qui contient les structures utiles
-  * L'interface Task représente une tâche à executer : lui ajouter une méthode **Do()**
+  * L'interface Task représente une tâche à exécuter : lui ajouter une méthode **Do()**
   * Ajouter à la structure Print un champ message
   * Implémenter les méthodes nécessaires pour que **Print** soit une **Task**
   * Ajouter à la structure resize les champs nécessaires : 

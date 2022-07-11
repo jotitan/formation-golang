@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"reflect"
 )
 
@@ -16,6 +17,15 @@ func NewManager() *Manager {
 func (m *Manager) NextId() int {
 	m.counter++
 	return m.counter
+}
+
+func (m *Manager) Get(id int) Task {
+	for _, task := range m.tasks {
+		if task.Id() == id {
+			return task
+		}
+	}
+	return nil
 }
 
 func (m *Manager) Add(task Task) Task {
@@ -62,4 +72,15 @@ func (m *Manager) GroupByType() map[string][]Task {
 		groups[typ] = append(list, t)
 	}
 	return groups
+}
+
+func (m *Manager) DetectAndCreateTask(payload map[string]interface{}) (Task, error) {
+	switch payload["type"].(string) {
+	case "print":
+		return NewPrint(payload["message"].(string), m.NextId()), nil
+	case "resize":
+		return NewResize(payload["path"].(string), payload["target"].(string), int(payload["height"].(float64)), int(payload["width"].(float64)), m.NextId()), nil
+	default:
+		return nil, errors.New("unknown type")
+	}
 }
