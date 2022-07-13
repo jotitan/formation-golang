@@ -3,114 +3,116 @@ package server
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"formation-go/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 	"testing"
-	"time"
 )
 
-func startAndWaitServer(manager *model.Manager) (Coordinator, error) {
+func startAndWaitCoordinatorServer(manager *model.Manager) (Coordinator, error) {
 	server := NewCoordinator(9007, manager)
-	go server.Run()
-	log.Println("Run server")
-	for i := 0; i < 10; i++ {
-		time.Sleep(time.Second)
-		// Call api status
-		resp, err := http.Get("http://localhost:9007/status")
-		if err == nil && resp.StatusCode == 200 {
-			return server, nil
-		}
+	if err := startGenericServer(server, 9007); err != nil {
+		return Coordinator{}, err
 	}
-	return Coordinator{}, errors.New("impossible to start server")
+	return server, nil
+}
+
+func startStopCoordinatorServer(t *testing.T, manager *model.Manager, fct func(t *testing.T)) {
+	server, err := startAndWaitCoordinatorServer(manager)
+	assert.Nil(t, err, "Server coordinator must start and be up")
+
+	fct(t)
+
+	server.Stop()
 }
 
 func TestRunServer(t *testing.T) {
-	// GIVEN
-	server, err := startAndWaitServer(nil)
-
-	// WHEN - THEN
-	assert.Nil(t, err, "Server coordinator must start and be up")
-	server.Stop()
+	startStopCoordinatorServer(t, nil, func(t *testing.T) {})
 }
 
 func TestStatusOnlyGet(t *testing.T) {
-	// GIVEN
-	server, err := startAndWaitServer(nil)
-	assert.Nil(t, err, "Server coordinator must start and be up")
+	startStopCoordinatorServer(t, nil, func(t *testing.T) {
+		// WHEN
+		resp, _ := http.Post("http://localhost:9007/status", "application/json", bytes.NewBuffer([]byte{}))
 
-	// WHEN
-	resp, _ := http.Post("http://localhost:9007/status", "application/json", bytes.NewBuffer([]byte{}))
-
-	// THEN
-	assert.Equal(t, http.StatusMethodNotAllowed, resp.StatusCode)
-	server.Stop()
+		// THEN
+		assert.Equal(t, http.StatusMethodNotAllowed, resp.StatusCode)
+	})
 }
 
 func TestPostTaskPrint(t *testing.T) {
+	manager := model.NewManager()
+	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+		// WHEN
+		resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Bonjour mon ami\"}"))
+
+		// THEN
+		assert.Equal(t, http.StatusCreated, resp.StatusCode)
+		idTask := string(read(resp.Body))
+		assert.Equal(t, fmt.Sprintf("%d", manager.GetAll()[0].Id()), idTask)
+		assert.Equal(t, 1, manager.Size())
+	})
+}
+
+func TestUpdateTaskStatus(t *testing.T) {
 	// GIVEN
 	manager := model.NewManager()
-	server, err := startAndWaitServer(manager)
-	assert.Nil(t, err, "Server coordinator must start and be up")
+	manager.Add(model.NewPrint("Vers l'infini et l'au dela", 1))
 
-	// WHEN
-	resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Bonjour mon ami\"}"))
+	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+		// WHEN
+		_, err := http.Post("http://localhost:9007/tasks/1", "application/json", strings.NewReader("{\"status\":\"finish\"}"))
+		resp, _ := http.Get("http://localhost:9007/tasks/1")
 
-	// THEN
-	assert.Equal(t, http.StatusCreated, resp.StatusCode)
-	idTask := string(read(resp.Body))
-	assert.Equal(t, fmt.Sprintf("%d", manager.GetAll()[0].Id()), idTask)
-	assert.Equal(t, 1, manager.Size())
-	server.Stop()
+		// THEN
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+		var task taskDto
+		err = json.Unmarshal(read(resp.Body), &task)
+		assert.Nil(t, err)
+		assert.Equal(t, "finish", task.Status)
+	})
 }
 
 func TestPostTaskMultiPrint(t *testing.T) {
 	// GIVEN
 	manager := model.NewManager()
-	server, err := startAndWaitServer(manager)
-	assert.Nil(t, err, "Server coordinator must start and be up")
+	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+		// WHEN
+		_, err := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Bonjour mon ami\"}"))
+		_, err = http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Vers l'infini et l'au dela\"}"))
+		_, err = http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Je sais voler\"}"))
 
-	// WHEN
-	_, err = http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Bonjour mon ami\"}"))
-	_, err = http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Vers l'infini et l'au dela\"}"))
-	_, err = http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Je sais voler\"}"))
+		// THEN
+		assert.Nil(t, err)
+		assert.Equal(t, 3, manager.Size())
+	})
 
-	// THEN
-	assert.Nil(t, err)
-	assert.Equal(t, 3, manager.Size())
-	server.Stop()
 }
 
 func TestGetDetailPrintTask(t *testing.T) {
 	// GIVEN
-	manager := model.NewManager()
-	server, err := startAndWaitServer(manager)
-	assert.Nil(t, err, "Server coordinator must start and be up")
+	startStopCoordinatorServer(t, model.NewManager(), func(t *testing.T) {
+		resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Bonjour mon ami\"}"))
+		idTask := string(read(resp.Body))
 
-	resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Bonjour mon ami\"}"))
-	idTask := string(read(resp.Body))
+		// WHEN
+		resp, err := http.Get(fmt.Sprintf("http://localhost:9007/tasks/%s", idTask))
 
-	// WHEN
-	resp, err = http.Get(fmt.Sprintf("http://localhost:9007/tasks/%s", idTask))
+		// THEN
+		assert.Nil(t, err)
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+		var response map[string]interface{}
+		err = json.Unmarshal(read(resp.Body), &response)
 
-	// THEN
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, resp.StatusCode)
-	var response map[string]interface{}
-	err = json.Unmarshal(read(resp.Body), &response)
-
-	assert.Nil(t, err)
-	assert.Equal(t, "print", response["type"])
-	assert.Equal(t, idTask, fmt.Sprintf("%.0f", response["id"]))
-	assert.Equal(t, "running", response["status"])
-
-	server.Stop()
+		assert.Nil(t, err)
+		assert.Equal(t, "print", response["type"])
+		assert.Equal(t, idTask, fmt.Sprintf("%.0f", response["id"]))
+		assert.Equal(t, "running", response["status"])
+	})
 }
 
 func read(reader io.Reader) []byte {
@@ -121,54 +123,46 @@ func read(reader io.Reader) []byte {
 func TestGetMultiTask(t *testing.T) {
 	// GIVEN
 	manager := model.NewManager()
-	server, err := startAndWaitServer(manager)
-	assert.Nil(t, err, "Server coordinator must start and be up")
+	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+		manager.Add(model.NewPrint("bonjour mon ami", 1))
+		manager.Add(model.NewPrint("je sais voler", 2))
+		manager.Add(model.NewPrint("c'est l'anniversaire d'andy", 3))
 
-	manager.Add(model.NewPrint("bonjour mon ami", 1))
-	manager.Add(model.NewPrint("je sais voler", 2))
-	manager.Add(model.NewPrint("c'est l'anniversaire d'andy", 3))
+		// WHEN
+		resp, _ := http.Get("http://localhost:9007/tasks")
 
-	// WHEN
-	resp, _ := http.Get("http://localhost:9007/tasks")
+		// THEN
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+		var lightTasks []taskDto
+		err := json.Unmarshal(read(resp.Body), &lightTasks)
 
-	// THEN
-	assert.Equal(t, http.StatusOK, resp.StatusCode)
-	var lightTasks []lightTask
-	err = json.Unmarshal(read(resp.Body), &lightTasks)
-
-	assert.Nil(t, err)
-	assert.Equal(t, 3, len(lightTasks))
-
-	server.Stop()
+		assert.Nil(t, err)
+		assert.Equal(t, 3, len(lightTasks))
+	})
 }
 
 func TestPostTaskResize(t *testing.T) {
 	// GIVEN
 	manager := model.NewManager()
-	server, err := startAndWaitServer(manager)
-	assert.Nil(t, err, "Server coordinator must start and be up")
+	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+		payload := "{\"type\":\"resize\",\"path\":\"/file.png\",\"target\":\"/file.png\", \"height\":200, \"width\":300}"
+		resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader(payload))
 
-	// WHEN
-	payload := "{\"type\":\"resize\",\"path\":\"/file.png\",\"target\":\"/file.png\", \"height\":200, \"width\":300}"
-	resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader(payload))
-
-	// THEN
-	assert.Equal(t, http.StatusCreated, resp.StatusCode)
-	assert.Equal(t, 1, manager.Size())
-	server.Stop()
+		// THEN
+		assert.Equal(t, http.StatusCreated, resp.StatusCode)
+		assert.Equal(t, 1, manager.Size())
+	})
 }
 
 func TestPostTaskFail(t *testing.T) {
 	// GIVEN
 	manager := model.NewManager()
-	server, err := startAndWaitServer(manager)
-	assert.Nil(t, err, "Server coordinator must start and be up")
+	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+		// WHEN
+		resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"unknown\"}"))
 
-	// WHEN
-	resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"unknown\"}"))
-
-	// THEN
-	assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
-	assert.Equal(t, 0, manager.Size())
-	server.Stop()
+		// THEN
+		assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
+		assert.Equal(t, 0, manager.Size())
+	})
 }

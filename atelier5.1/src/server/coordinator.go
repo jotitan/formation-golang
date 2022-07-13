@@ -48,7 +48,7 @@ func (c Coordinator) status(w http.ResponseWriter, r *http.Request) {
 
 func (c Coordinator) manageTasks(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		c.addTask(w, r)
+		c.updateStatusTask(w, r)
 	}
 	if r.Method == http.MethodGet {
 		c.getTask(w, r)
@@ -56,13 +56,13 @@ func (c Coordinator) manageTasks(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c Coordinator) getTasks(w http.ResponseWriter, r *http.Request) {
-	tasks := c.taskManager.GetAll()
-	lightTasks := make([]lightTask, len(tasks))
+	tasks := c.taskManager.GetAllWithStatus()
+	lightTasks := make([]taskDto, len(tasks))
 	for i, t := range tasks {
-		lightTasks[i] = lightTask{
-			t.Type(),
-			t.Id(),
-			"running",
+		lightTasks[i] = taskDto{
+			t.Task.Type(),
+			t.Task.Id(),
+			t.Status,
 		}
 	}
 	data, _ := json.Marshal(lightTasks)
@@ -75,17 +75,29 @@ func (c Coordinator) getTask(w http.ResponseWriter, r *http.Request) {
 		c.getTasks(w, r)
 		return
 	}
-	task := c.taskManager.Get(idTask)
-	data, err := json.Marshal(lightTask{
+	task, status := c.taskManager.GetWithStatus(idTask)
+	data, err := json.Marshal(taskDto{
 		TypeTask: task.Type(),
 		Id:       task.Id(),
-		Status:   "running",
+		Status:   status,
 	})
 	if err != nil {
 		http.Error(w, "error marshalling", http.StatusBadRequest)
 		return
 	}
 	w.Write(data)
+}
+
+func (c Coordinator) updateStatusTask(w http.ResponseWriter, r *http.Request) {
+	idTask, err := strconv.Atoi(strings.ReplaceAll(r.RequestURI, "/tasks/", ""))
+	if err != nil {
+		c.addTask(w, r)
+		return
+	}
+	var payload map[string]string
+	data, _ := ioutil.ReadAll(r.Body)
+	json.Unmarshal(data, &payload)
+	c.taskManager.UpdateStatus(idTask, payload["status"])
 }
 
 func (c Coordinator) addTask(w http.ResponseWriter, r *http.Request) {
@@ -103,10 +115,10 @@ func (c Coordinator) addTask(w http.ResponseWriter, r *http.Request) {
 	}
 	c.taskManager.Add(task)
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(fmt.Sprintf("%d", task.Id())))
+	w.Write([]byte(strconv.Itoa(task.Id())))
 }
 
-type lightTask struct {
+type taskDto struct {
 	TypeTask string `json:"type"`
 	Id       int    `json:"id"`
 	Status   string `json:"status"`

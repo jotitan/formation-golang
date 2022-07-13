@@ -42,6 +42,11 @@ func (m *Manager) Remove(task Task) {
 	}
 }
 
+// TODO implement to manage status
+func (m *Manager) GetWithStatus(id int) (Task, string) {
+	return nil, ""
+}
+
 func (m *Manager) GetAll() []Task {
 	return m.tasks
 }

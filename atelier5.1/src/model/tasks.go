@@ -37,7 +37,7 @@ func (r resize) Do() bool {
 	return true
 }
 
-//Id return unique id of task
+//Id return unique id of Task
 func (r resize) Id() int {
 	return r.uuid
 }
@@ -63,7 +63,7 @@ func (p print) Do() bool {
 	return true
 }
 
-//Id return unique id of task
+//Id return unique id of Task
 func (p print) Id() int {
 	return p.uuid
 }

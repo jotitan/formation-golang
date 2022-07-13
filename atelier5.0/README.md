@@ -41,7 +41,8 @@ L'objectif est de pouvoir exécuter les tâches sur plusieurs worker afin de ré
   - Créer un serveur de base qui se lance sur le port 9007
   - Ajouter une route **/status** qui renvoie juste "up"
   - Modifier la fonction pour n'accepter que les requêtes GET, en revoyant une 405
-- **Pour recevoir les demandes globales (coordinateur) **
+
+- **Pour recevoir les demandes globales (coordinateur)**
   - Ajouter une route _POST_ **/task** pour pouvoir ajouter une tâche avec les champs : 
     - type : type de tâche (print ou resize)
     - les champs liés au type (message pour print par exemple)
@@ -49,8 +50,15 @@ L'objectif est de pouvoir exécuter les tâches sur plusieurs worker afin de ré
   - Ajouter une route _GET_ **/tasks** pour lister les tâches : l'id, le type et l'état de la tâche
   - Ajouter une route _GET_ **/tasks/:id** pour avoir le détail d'une tâche : 
     - Attention, le task manager ne permet pas encore de retourner une tâche, à vous de l'ajouter :)
+  - Ajouter une route _POST_ **/tasks/:id** pour mettre à jour le statut d'une tâche : 
+    - Le statut peut-être "error" ou "finish"
+    - Actuellement, le task manager ne sais pas gérer le statut, à vous de trouver une solution :)
 
-- Pour recevoir une tâche et la réaliser
+- **Pour recevoir une tâche et l'exécuter (worker)**
+  - Créer un nouveau serveur qui se lance sur un port au choix
+  - Ajouter une route **/status** qui renvoie juste "up"
+  - Ajouter une route _POST_ **/task** qui exécute la tâche reçue
+    - Lorsque la tâche est réalisée, une requête _POST_ est faite sur le coordinateur : /tasks/:id avec le statut (error ou finish)
 
 
 

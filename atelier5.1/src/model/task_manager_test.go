@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"sort"
 	"testing"
 )
 
@@ -29,7 +30,7 @@ func TestAddTwoManager(t *testing.T) {
 	// GIVEN
 	manager := NewManager()
 	manager.Add(NewPrint("", 0))
-	manager.Add(NewPrint("", 0))
+	manager.Add(NewPrint("", 1))
 	// WHEN
 	size := manager.Size()
 	// THEN
@@ -40,7 +41,7 @@ func TestGroupManager(t *testing.T) {
 	// GIVEN
 	manager := NewManager()
 	manager.Add(NewPrint("", 0))
-	manager.Add(NewPrint("", 0))
+	manager.Add(NewPrint("", 1))
 	// WHEN
 	groups := manager.GroupByType()
 	// THEN
@@ -52,7 +53,7 @@ func TestGroupTwoManager(t *testing.T) {
 	// GIVEN
 	manager := NewManager()
 	manager.Add(NewPrint("", 0))
-	manager.Add(NewPrint("", 0))
+	manager.Add(NewPrint("", 1))
 	manager.Add(NewResize("", "", 0, 0, 0))
 	// WHEN
 	groups := manager.GroupByType()
@@ -95,6 +96,31 @@ func TestSimpleRemove(t *testing.T) {
 	assert.Equal(t, task2.Id(), manager.GetAll()[0].Id(), fmt.Sprintf("Must find %d", task2.Id()))
 }
 
+func TestGetNotFound(t *testing.T) {
+	// GIVEN
+	manager := NewManager()
+
+	// WHEN
+	task, _ := manager.GetWithStatus(1)
+
+	// THEN
+	assert.Nil(t, task)
+}
+
+func TestUpdateStatus(t *testing.T) {
+	// GIVEN
+	manager := NewManager()
+	task := NewPrint("", manager.NextId())
+	manager.Add(task)
+
+	// WHEN
+	manager.UpdateStatus(task.Id(), "finish")
+
+	// THEN
+	_, status := manager.GetWithStatus(task.Id())
+	assert.Equal(t, "finish", status)
+}
+
 func TestComplexRemove(t *testing.T) {
 	// GIVEN
 	manager := NewManager()
@@ -116,6 +142,10 @@ func TestComplexRemove(t *testing.T) {
 
 	// THEN
 	assert.Equal(t, 2, manager.Size(), "Must find 2")
-	assert.Equal(t, task2.Id(), manager.GetAll()[0].Id(), fmt.Sprintf("Must find %d", task2.Id()))
-	assert.Equal(t, task4.Id(), manager.GetAll()[1].Id(), fmt.Sprintf("Must find %d", task4.Id()))
+	tasks := manager.GetAll()
+	sort.Slice(tasks, func(i, j int) bool {
+		return tasks[i].Id() < tasks[j].Id()
+	})
+	assert.Equal(t, task2.Id(), tasks[0].Id(), fmt.Sprintf("Must find id %d", task2.Id()))
+	assert.Equal(t, task4.Id(), tasks[1].Id(), fmt.Sprintf("Must find id %d", task4.Id()))
 }

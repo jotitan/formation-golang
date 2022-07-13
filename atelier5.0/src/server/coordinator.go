@@ -13,7 +13,7 @@ func (c Coordinator) Run() {}
 func (c Coordinator) Stop() {}
 
 //lightTask is a dto to give task information
-type lightTask struct {
+type taskDto struct {
 	TypeTask string `json:"type"`
 	Id       int    `json:"id"`
 	Status   string `json:"status"`
