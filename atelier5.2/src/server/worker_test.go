@@ -8,6 +8,8 @@ import (
 	"testing"
 )
 
+const defaultWorkerPort = 9008
+
 type mockAck struct {
 	results map[int]string
 	chanel  chan statusAck
@@ -23,25 +25,26 @@ func (ma mockAck) Do(id int, status string) {
 	ma.chanel <- statusAck{id, status}
 }
 
+func newMockAck() mockAck {
+	return mockAck{make(map[int]string), make(chan statusAck, 10)}
+}
+
 type mockRegister struct{}
 
 func (mr mockRegister) Register(url string) error {
 	return nil
 }
 
-func newMockAck() mockAck {
-	return mockAck{make(map[int]string), make(chan statusAck, 10)}
-}
-func startAndWaitWorkerServerWithRegister(ackManager model.Ack, register RegisterCoordinator) (Worker, error) {
-	server := NewWorker(9008, ackManager, register, false)
-	if err := startGenericServer(server, 9008); err != nil {
+func startAndWaitWorkerServerWithRegister(port int, ackManager model.Ack, register RegisterCoordinator) (Worker, error) {
+	server := NewWorker(port, ackManager, register, false)
+	if err := startGenericServer(server, port); err != nil {
 		return Worker{}, err
 	}
 	return server, nil
 }
 
-func startStopWorkerServerWithRegister(t *testing.T, ackManager model.Ack, register RegisterCoordinator, fct func(t *testing.T)) {
-	server, err := startAndWaitWorkerServerWithRegister(ackManager, register)
+func startStopWorkerServerWithRegister(t *testing.T, port int, ackManager model.Ack, register RegisterCoordinator, fct func(t *testing.T)) {
+	server, err := startAndWaitWorkerServerWithRegister(port, ackManager, register)
 	assert.Nil(t, err, "Server coordinator must start and be up")
 
 	fct(t)
@@ -50,7 +53,7 @@ func startStopWorkerServerWithRegister(t *testing.T, ackManager model.Ack, regis
 }
 
 func startStopWorkerServer(t *testing.T, ackManager model.Ack, fct func(t *testing.T)) {
-	startStopWorkerServerWithRegister(t, ackManager, mockRegister{}, fct)
+	startStopWorkerServerWithRegister(t, defaultWorkerPort, ackManager, mockRegister{}, fct)
 }
 
 func TestRunWorkerServer(t *testing.T) {
@@ -101,8 +104,9 @@ func TestRunTask(t *testing.T) {
 
 func TestCompleteChain(t *testing.T) {
 	manager := model.NewManager()
-	startStopCoordinatorServer(t, manager, func(t *testing.T) {
-		startStopWorkerServer(t, model.NewAckManager("http://localhost:9007"), func(t *testing.T) {
+	pool := NewWorkerPool(nil)
+	startStopCoordinatorServer(t, manager, pool, func(t *testing.T) {
+		startStopWorkerServerWithRegister(t, defaultWorkerPort, model.NewAckManager("http://localhost:9007"), NewRegisterCoordinator("http://localhost:9007"), func(t *testing.T) {
 			// GIVEN
 			manager.Add(model.NewPrint("Vers l'infini et l'au dela", 1))
 			payload := "{\"type\":\"print\",\"message\":\"Vers l'infini et l'au dela\"}"
@@ -113,7 +117,7 @@ func TestCompleteChain(t *testing.T) {
 			// THEN
 			assert.Equal(t, http.StatusOK, resp.StatusCode)
 			_, status := manager.GetWithStatus(1)
-			assert.Equal(t, "finish", status)
+			assert.Equal(t, model.TaskFinish, status)
 		})
 	})
 }
@@ -122,7 +126,7 @@ func TestFullCompleteChain(t *testing.T) {
 	manager := model.NewManager()
 	pool := NewWorkerPool(LaunchTask{})
 	startStopCoordinatorServer(t, manager, pool, func(t *testing.T) {
-		startStopWorkerServerWithRegister(t, model.NewAckManager("http://localhost:9007"), NewRegisterCoordinator("http://localhost:9007"), func(t *testing.T) {
+		startStopWorkerServerWithRegister(t, defaultWorkerPort, model.NewAckManager("http://localhost:9007"), NewRegisterCoordinator("http://localhost:9007"), func(t *testing.T) {
 			// GIVEN
 
 			// WHEN
@@ -134,6 +138,31 @@ func TestFullCompleteChain(t *testing.T) {
 			assert.Equal(t, http.StatusCreated, resp.StatusCode)
 			_, status := manager.GetWithStatus(1)
 			assert.Equal(t, model.TaskFinish, status)
+		})
+	})
+}
+
+func TestManyWorkers(t *testing.T) {
+	manager := model.NewManager()
+	pool := NewWorkerPool(LaunchTask{})
+	startStopCoordinatorServer(t, manager, pool, func(t *testing.T) {
+		startStopWorkerServerWithRegister(t, 9009, model.NewAckManager("http://localhost:9007"), NewRegisterCoordinator("http://localhost:9007"), func(t *testing.T) {
+			startStopWorkerServerWithRegister(t, defaultWorkerPort, model.NewAckManager("http://localhost:9007"), NewRegisterCoordinator("http://localhost:9007"), func(t *testing.T) {
+				// GIVEN
+
+				// WHEN
+				payload := "{\"type\":\"print\",\"message\":\"Vers l'infini et l'au dela\"}"
+				http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader(payload))
+				http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader(payload))
+				http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader(payload))
+				http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader(payload))
+
+				// THEN
+				assert.Equal(t, 2, pool.Size())
+				for _, task := range manager.GetAllWithStatus() {
+					assert.Equal(t, model.TaskFinish, task.Status)
+				}
+			})
 		})
 	})
 }

@@ -13,16 +13,16 @@ import (
 	"testing"
 )
 
-func startAndWaitCoordinatorServer(manager *model.Manager) (Coordinator, error) {
-	server := NewCoordinator(9007, manager)
+func startAndWaitCoordinatorServer(manager *model.Manager, pool *PoolWorker) (Coordinator, error) {
+	server := NewCoordinator(9007, manager, pool)
 	if err := startGenericServer(server, 9007); err != nil {
 		return Coordinator{}, err
 	}
 	return server, nil
 }
 
-func startStopCoordinatorServer(t *testing.T, manager *model.Manager, fct func(t *testing.T)) {
-	server, err := startAndWaitCoordinatorServer(manager)
+func startStopCoordinatorServer(t *testing.T, manager *model.Manager, pool *PoolWorker, fct func(t *testing.T)) {
+	server, err := startAndWaitCoordinatorServer(manager, pool)
 	assert.Nil(t, err, "Server coordinator must start and be up")
 
 	fct(t)
@@ -31,11 +31,11 @@ func startStopCoordinatorServer(t *testing.T, manager *model.Manager, fct func(t
 }
 
 func TestRunServer(t *testing.T) {
-	startStopCoordinatorServer(t, nil, func(t *testing.T) {})
+	startStopCoordinatorServer(t, nil, NewWorkerPool(nil), func(t *testing.T) {})
 }
 
 func TestStatusOnlyGet(t *testing.T) {
-	startStopCoordinatorServer(t, nil, func(t *testing.T) {
+	startStopCoordinatorServer(t, nil, NewWorkerPool(nil), func(t *testing.T) {
 		// WHEN
 		resp, _ := http.Post("http://localhost:9007/status", "application/json", bytes.NewBuffer([]byte{}))
 
@@ -46,7 +46,7 @@ func TestStatusOnlyGet(t *testing.T) {
 
 func TestPostTaskPrint(t *testing.T) {
 	manager := model.NewManager()
-	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+	startStopCoordinatorServer(t, manager, NewWorkerPool(nil), func(t *testing.T) {
 		// WHEN
 		resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Bonjour mon ami\"}"))
 
@@ -63,7 +63,7 @@ func TestUpdateTaskStatus(t *testing.T) {
 	manager := model.NewManager()
 	manager.Add(model.NewPrint("Vers l'infini et l'au dela", 1))
 
-	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+	startStopCoordinatorServer(t, manager, NewWorkerPool(nil), func(t *testing.T) {
 		// WHEN
 		_, err := http.Post("http://localhost:9007/tasks/1", "application/json", strings.NewReader("{\"status\":\"finish\"}"))
 		resp, _ := http.Get("http://localhost:9007/tasks/1")
@@ -73,14 +73,14 @@ func TestUpdateTaskStatus(t *testing.T) {
 		var task taskDto
 		err = json.Unmarshal(read(resp.Body), &task)
 		assert.Nil(t, err)
-		assert.Equal(t, "finish", task.Status)
+		assert.Equal(t, model.TaskFinish, task.Status)
 	})
 }
 
 func TestPostTaskMultiPrint(t *testing.T) {
 	// GIVEN
 	manager := model.NewManager()
-	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+	startStopCoordinatorServer(t, manager, NewWorkerPool(nil), func(t *testing.T) {
 		// WHEN
 		_, err := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Bonjour mon ami\"}"))
 		_, err = http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Vers l'infini et l'au dela\"}"))
@@ -95,7 +95,7 @@ func TestPostTaskMultiPrint(t *testing.T) {
 
 func TestGetDetailPrintTask(t *testing.T) {
 	// GIVEN
-	startStopCoordinatorServer(t, model.NewManager(), func(t *testing.T) {
+	startStopCoordinatorServer(t, model.NewManager(), NewWorkerPool(nil), func(t *testing.T) {
 		resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"print\",\"message\":\"Bonjour mon ami\"}"))
 		idTask := string(read(resp.Body))
 
@@ -111,7 +111,7 @@ func TestGetDetailPrintTask(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, "print", response["type"])
 		assert.Equal(t, idTask, fmt.Sprintf("%.0f", response["id"]))
-		assert.Equal(t, "running", response["status"])
+		assert.Equal(t, model.TaskPending, model.TaskStatus(response["status"].(string)))
 	})
 }
 
@@ -123,7 +123,7 @@ func read(reader io.Reader) []byte {
 func TestGetMultiTask(t *testing.T) {
 	// GIVEN
 	manager := model.NewManager()
-	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+	startStopCoordinatorServer(t, manager, NewWorkerPool(nil), func(t *testing.T) {
 		manager.Add(model.NewPrint("bonjour mon ami", 1))
 		manager.Add(model.NewPrint("je sais voler", 2))
 		manager.Add(model.NewPrint("c'est l'anniversaire d'andy", 3))
@@ -144,7 +144,7 @@ func TestGetMultiTask(t *testing.T) {
 func TestPostTaskResize(t *testing.T) {
 	// GIVEN
 	manager := model.NewManager()
-	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+	startStopCoordinatorServer(t, manager, NewWorkerPool(nil), func(t *testing.T) {
 		payload := "{\"type\":\"resize\",\"path\":\"/file.png\",\"target\":\"/file.png\", \"height\":200, \"width\":300}"
 		resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader(payload))
 
@@ -157,7 +157,7 @@ func TestPostTaskResize(t *testing.T) {
 func TestPostTaskFail(t *testing.T) {
 	// GIVEN
 	manager := model.NewManager()
-	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+	startStopCoordinatorServer(t, manager, NewWorkerPool(nil), func(t *testing.T) {
 		// WHEN
 		resp, _ := http.Post("http://localhost:9007/tasks", "application/json", strings.NewReader("{\"type\":\"unknown\"}"))
 
@@ -170,7 +170,7 @@ func TestPostTaskFail(t *testing.T) {
 func TestRegister(t *testing.T) {
 	// GIVEN
 	manager := model.NewManager()
-	startStopCoordinatorServer(t, manager, func(t *testing.T) {
+	startStopCoordinatorServer(t, manager, NewWorkerPool(nil), func(t *testing.T) {
 		// WHEN
 		resp, _ := http.Post("http://localhost:9007/register", "application/json", strings.NewReader("{\"url\":\"http://localhost:9008\"}"))
 

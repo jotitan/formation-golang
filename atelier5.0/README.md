@@ -4,7 +4,7 @@
 #### Objectifs
 
 * Savoir créer et appeler des API Rest avec l'API standard (atelier 5.0)
-* Savoir utiliser la librairie Gin Gonic pour simplifier le développement d'API Rest (Atelier 5.1)
+* Savoir utiliser la librairie Gin Gonic pour simplifier le développement d'API Rest (Atelier 5.2)
 
 #### Etapes
 
@@ -13,6 +13,8 @@ Nous allons écrire deux APIS :
 * La seconde API sera un worker / unité de traitement qui exécutera les tâches
 
 L'objectif est de pouvoir exécuter les tâches sur plusieurs worker afin de répartir facilement la charge.
+
+La communication entre le coordinateur et le(s) worker(s) se fera dans l'atelier 5.1
 
 ##### Schéma
 
@@ -59,8 +61,8 @@ L'objectif est de pouvoir exécuter les tâches sur plusieurs worker afin de ré
   - Ajouter une route **/status** qui renvoie juste "up"
   - Ajouter une route _POST_ **/task** qui exécute la tâche reçue
     - Lorsque la tâche est réalisée, une requête _POST_ est faite sur le coordinateur : /tasks/:id avec le statut (error ou finish)
-
-
+    
+- **Connecter les appels entre le coordinateur et le ou les workers**
 
 #### Aide
 

@@ -3,9 +3,11 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"formation-go/model"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -16,7 +18,22 @@ type RegisterCoordinator interface {
 	Register(url string) error
 }
 
+type RegisterCoordinatorFromUrl struct {
+	url string
+}
+
 func NewRegisterCoordinator(urlCoordinator string) RegisterCoordinator {
+	return RegisterCoordinatorFromUrl{url: urlCoordinator}
+}
+
+func (rc RegisterCoordinatorFromUrl) Register(url string) error {
+	resp, err := http.Post(fmt.Sprintf("%s/register", rc.url), "application/json", strings.NewReader(fmt.Sprintf("{\"url\":\"%s\"}", url)))
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != http.StatusOK {
+		return errors.New("impossible to connect coordinator")
+	}
 	return nil
 }
 
@@ -24,15 +41,17 @@ type Worker struct {
 	server     *http.Server
 	ackManager model.Ack
 	asyncMode  bool
+	register   RegisterCoordinator
+	port       int
 }
 
-func NewWorker(port int, ackManager model.Ack, asyncMode bool) Worker {
+func NewWorker(port int, ackManager model.Ack, register RegisterCoordinator, asyncMode bool) Worker {
 	server := http.ServeMux{}
 	wrapServer := http.Server{
 		Addr:    fmt.Sprintf(":%d", port),
 		Handler: &server,
 	}
-	w := Worker{&wrapServer, ackManager, asyncMode}
+	w := Worker{&wrapServer, ackManager, asyncMode, register, port}
 
 	server.HandleFunc("/status", w.status)
 	server.HandleFunc("/tasks", w.manageTasks)
@@ -42,6 +61,10 @@ func NewWorker(port int, ackManager model.Ack, asyncMode bool) Worker {
 }
 
 func (work Worker) Run() {
+	err := work.register.Register(fmt.Sprintf("http://localhost:%d", work.port))
+	if err != nil {
+		log.Fatal("Impossible to start server", err)
+	}
 	work.server.ListenAndServe()
 }
 
@@ -75,11 +98,11 @@ func (work Worker) manageTasks(w http.ResponseWriter, r *http.Request) {
 }
 
 func (work Worker) runTask(task model.Task) {
-	status := "finish"
+	status := model.TaskFinish
 	if !task.Do() {
-		status = "end"
+		status = model.TaskError
 	}
-	work.ackManager.Do(task.Id(), status)
+	work.ackManager.Do(task.Id(), string(status))
 }
 
 func (work Worker) status(w http.ResponseWriter, r *http.Request) {

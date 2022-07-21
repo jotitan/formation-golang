@@ -1,22 +1,26 @@
 # Atelier 5.1
-### Créer une API REST avec la librairie Gin
+### Connecter le coordinateur au(x) worker(s)
 
 #### Objectifs
 
-* Savoir utiliser la librairie Gin Gonic pour simplifier le développement d'API Rest (Atelier 5.1)
+* Savoir gérer un pool de server
 
 #### Etapes
 
-- **Premier pas**
-  - Créer un serveur de base qui se lance sur le port 9001
-  - Ajouter une route **/status** qui renvoie juste "up"
-  - Modifier la fonction pour n'accepter que les requêtes GET, en revoyant une 405
-- ** 
-- Pour recevoir les demandes globales de traitements et le suivi des tâches
-- Pour recevoir une tâche et la réaliser
+Le coordinateur va recevoir des requêtes et les déléguer à un pool de worker. 
+Voici les différentes étapes
 
+- Lorsqu'un worker se connecte, il connaît l'url du coordinateur et s'y connecte
+- Lorsqu'une tâche est reçue, le coordinateur va la déléguer à un des workers connectés
+- Lorsque le worker a fini la tâche, il va notifier le coordinateur
 
+Le code à ajouter : 
+- Sur le coordinateur, ajouter une route _POST_ **/register où le worker indique son url
+- Implémenter une version simple du pool worker pour exécuter une tâche (pas toujours le même worker)
+  - L'interface **TaskSenderToWorker** permet de décorréler la gestion du pool de l'action d'envoi (notamment pour mocker) 
+  - Lors du démarrage d'un worker, s'enregistrer auprès du coordinateur
+  - Modifier le test TestCompleteChain afin de tester la chaine : lancement du coordinateur, du worker et ajout d'une tache print jusqu'à la notification
 
 #### Aide
 
-* Pour créer un serveur en Go, [la page d'aide](https://pkg.go.dev/net/http)
+* Pour trier une liste : sort.Slice
