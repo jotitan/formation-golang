@@ -28,6 +28,7 @@ func (l LaunchTask) Send(task model.Task, url string) error {
 type innerWorker struct {
 	url      string
 	capacity int
+	uuid     string
 }
 
 type PoolWorker struct {
@@ -44,21 +45,23 @@ func (pw *PoolWorker) Size() int {
 	return len(pw.workers)
 }
 
-func (pw *PoolWorker) Register(url string) bool {
-	_, exist := pw.workers[url]
+func (pw *PoolWorker) Register(url, uuid string) bool {
+	_, exist := pw.workers[uuid]
 	if exist {
 		return false
 	}
-	pw.workers[url] = innerWorker{
+	pw.workers[uuid] = innerWorker{
 		url:      url,
 		capacity: 1,
+		uuid:     uuid,
 	}
+	// Add worker in bridge pool
 	log.Println("New worker in pool")
 	return true
 }
 
-func (pw *PoolWorker) Remove(url string) {
-	delete(pw.workers, url)
+func (pw *PoolWorker) Remove(uuid string) {
+	delete(pw.workers, uuid)
 }
 
 // Sort by url

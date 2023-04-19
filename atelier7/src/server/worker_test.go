@@ -17,12 +17,13 @@ type mockAck struct {
 
 type statusAck struct {
 	id     int
+	uuid   string
 	status string
 }
 
-func (ma mockAck) Do(id int, status string) {
+func (ma mockAck) Do(id int, uuid, status string) {
 	ma.results[id] = status
-	ma.chanel <- statusAck{id, status}
+	ma.chanel <- statusAck{id, uuid, status}
 }
 
 func newMockAck() mockAck {
@@ -31,7 +32,7 @@ func newMockAck() mockAck {
 
 type mockRegister struct{}
 
-func (mr mockRegister) Register(url string) error {
+func (mr mockRegister) Register(url, uuid string) error {
 	return nil
 }
 

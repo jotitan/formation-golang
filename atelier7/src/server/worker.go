@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"formation-go/model"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,7 +15,7 @@ import (
 
 type RegisterCoordinator interface {
 	//Register : url is the url of the worker
-	Register(url string) error
+	Register(url, uuid string) error
 }
 
 type RegisterCoordinatorFromUrl struct {
@@ -25,8 +26,9 @@ func NewRegisterCoordinator(urlCoordinator string) RegisterCoordinator {
 	return RegisterCoordinatorFromUrl{url: urlCoordinator}
 }
 
-func (rc RegisterCoordinatorFromUrl) Register(url string) error {
-	resp, err := http.Post(fmt.Sprintf("%s/register", rc.url), "application/json", strings.NewReader(fmt.Sprintf("{\"url\":\"%s\"}", url)))
+func (rc RegisterCoordinatorFromUrl) Register(url, uuid string) error {
+	payload := strings.NewReader(fmt.Sprintf("{\"url\":\"%s\",\"uuid\":\"%s\"}", url, uuid))
+	resp, err := http.Post(fmt.Sprintf("%s/register", rc.url), "application/json", payload)
 	if err != nil {
 		return err
 	}
@@ -42,6 +44,7 @@ type Worker struct {
 	asyncMode  bool
 	register   RegisterCoordinator
 	port       int
+	uuid       uuid.UUID
 }
 
 func NewWorker(port int, ackManager model.Ack, register RegisterCoordinator, asyncMode bool) Worker {
@@ -51,7 +54,7 @@ func NewWorker(port int, ackManager model.Ack, register RegisterCoordinator, asy
 		Addr:    fmt.Sprintf(":%d", port),
 		Handler: server,
 	}
-	w := Worker{&wrapServer, ackManager, asyncMode, register, port}
+	w := Worker{&wrapServer, ackManager, asyncMode, register, port, uuid.New()}
 
 	server.GET("/status", w.status)
 	server.POST("/tasks/:id", w.manageTasks)
@@ -60,7 +63,7 @@ func NewWorker(port int, ackManager model.Ack, register RegisterCoordinator, asy
 }
 
 func (work Worker) Run() {
-	err := work.register.Register(fmt.Sprintf("http://localhost:%d", work.port))
+	err := work.register.Register(fmt.Sprintf("http://localhost:%d", work.port), work.uuid.String())
 	if err != nil {
 		log.Fatal("Impossible to start server", err)
 	}
@@ -98,7 +101,7 @@ func (work Worker) runTask(task model.Task) {
 	if !task.Do() {
 		status = model.TaskError
 	}
-	work.ackManager.Do(task.Id(), string(status))
+	work.ackManager.Do(task.Id(), work.uuid.String(), string(status))
 }
 
 func (work Worker) status(ctx *gin.Context) {

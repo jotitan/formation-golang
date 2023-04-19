@@ -15,7 +15,7 @@ Voici les différentes étapes
 - Lorsque le worker a fini la tâche, il va notifier le coordinateur
 
 Le code à ajouter : 
-- Sur le coordinateur, ajouter une route _POST_ **/register où le worker indique son url
+- Sur le coordinateur, ajouter une route _POST_ **/register** où le worker indique son url
 - Implémenter une version simple du pool worker pour exécuter une tâche (pas toujours le même worker)
   - L'interface **TaskSenderToWorker** permet de décorréler la gestion du pool de l'action d'envoi (notamment pour mocker) 
   - Lors du démarrage d'un worker, s'enregistrer auprès du coordinateur

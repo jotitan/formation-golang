@@ -7,7 +7,7 @@ import (
 )
 
 type Ack interface {
-	Do(id int, status string)
+	Do(id int, uuid, status string)
 }
 
 type AckManager struct {
@@ -18,7 +18,7 @@ func NewAckManager(url string) *AckManager {
 	return &AckManager{url}
 }
 
-func (a AckManager) Do(id int, status string) {
+func (a AckManager) Do(id int, uuid, status string) {
 	url := fmt.Sprintf("%s/tasks/%d", a.urlCoordinator, id)
-	http.Post(url, "application/json", strings.NewReader(fmt.Sprintf("{\"status\":\"%s\"}", status)))
+	http.Post(url, "application/json", strings.NewReader(fmt.Sprintf("{\"status\":\"%s\",\"uuid\":\"%s\"}", status, uuid)))
 }
