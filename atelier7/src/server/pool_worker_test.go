@@ -11,7 +11,7 @@ func TestAddWorker(t *testing.T) {
 	pool := NewWorkerPool(NewMockSender())
 
 	// WHEN
-	pool.Register("url1", "uuid1")
+	pool.Register("url1", "uuid1", 1)
 
 	// THEN
 	assert.Equal(t, 1, pool.Size())
@@ -22,9 +22,9 @@ func TestAddWorkers(t *testing.T) {
 	pool := NewWorkerPool(NewMockSender())
 
 	// WHEN
-	pool.Register("url1", "uuid1")
-	pool.Register("url2", "uuid2")
-	pool.Register("url3", "uuid3")
+	pool.Register("url1", "uuid1", 1)
+	pool.Register("url2", "uuid2", 1)
+	pool.Register("url3", "uuid3", 1)
 
 	// THEN
 	assert.Equal(t, 3, pool.Size())
@@ -37,8 +37,8 @@ func TestAvoidDuplicate(t *testing.T) {
 	pool := NewWorkerPool(NewMockSender())
 
 	// WHEN
-	pool.Register("url1", "uuid1")
-	assert.False(t, pool.Register("url1", "uuid1"))
+	pool.Register("url1", "uuid1", 1)
+	assert.False(t, pool.Register("url1", "uuid1", 1))
 
 	// THEN
 	assert.Equal(t, 1, pool.Size())
@@ -48,7 +48,7 @@ func TestSendTask(t *testing.T) {
 	// GIVEN
 	sender := NewMockSender()
 	pool := NewWorkerPool(sender)
-	pool.Register("url1", "uuid1")
+	pool.Register("url1", "uuid1", 1)
 
 	// WHEN
 	pool.Execute(model.NewPrint("Vers l'infini et au dela", 1))
@@ -61,9 +61,9 @@ func TestSendTasksRoundRobin(t *testing.T) {
 	// GIVEN
 	sender := NewMockSender()
 	pool := NewWorkerPool(sender)
-	pool.Register("url1", "uuid1")
-	pool.Register("url2", "uuid2")
-	pool.Register("url3", "uuid3")
+	pool.Register("url1", "uuid1", 1)
+	pool.Register("url2", "uuid2", 1)
+	pool.Register("url3", "uuid3", 1)
 
 	// WHEN
 	pool.Execute(model.NewPrint("Vers l'infini et au dela", 1))

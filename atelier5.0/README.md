@@ -70,7 +70,7 @@ La communication entre le coordinateur et le(s) worker(s) se fera dans l'atelier
 * Pour convertir des données en json, vous pouvez utiliser la [bibliothèque json](https://pkg.go.dev/encoding/json)
   * [json.Marshall](https://pkg.go.dev/encoding/json#Marshal) pour sérialiser et [json.Unmarshall](https://pkg.go.dev/encoding/json#Unmarshal) pour désérialiser
   * Les "struct field's tag" permettent de personnaliser le nom des champs lors de la sérialisation
-  * / ! \ Seuls les champs publiques sont sérialiser
+  * / ! \ Seuls les champs publics sont sérialisés
 
 #### Amélioration
 

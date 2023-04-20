@@ -89,7 +89,7 @@ func (c Coordinator) updateStatusTask(ctx *gin.Context) {
 	}
 	payload := extractPayload(ctx)
 	c.taskManager.UpdateStatus(idTask, model.TaskStatus(payload["status"].(string)))
-	// uuid : payload["uuid"].(string)
+	c.pool.poolBridge.ReleaseWorker(payload["uuid"].(string))
 }
 
 func (c Coordinator) addTask(ctx *gin.Context) {
@@ -106,7 +106,7 @@ func (c Coordinator) addTask(ctx *gin.Context) {
 
 func (c Coordinator) addWorkerToPool(ctx *gin.Context) {
 	payload := extractPayload(ctx)
-	c.pool.Register(payload["url"].(string), payload["uuid"].(string))
+	c.pool.Register(payload["url"].(string), payload["uuid"].(string), int(payload["capacity"].(float64)))
 }
 
 func extractPayload(ctx *gin.Context) map[string]interface{} {

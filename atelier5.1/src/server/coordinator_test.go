@@ -34,6 +34,16 @@ func TestRunServer(t *testing.T) {
 	startStopCoordinatorServer(t, nil, func(t *testing.T) {})
 }
 
+func TestStatus(t *testing.T) {
+	startStopCoordinatorServer(t, nil, func(t *testing.T) {
+		// WHEN
+		resp, _ := http.Get("http://localhost:9007/status")
+
+		// THEN
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+	})
+}
+
 func TestStatusOnlyGet(t *testing.T) {
 	startStopCoordinatorServer(t, nil, func(t *testing.T) {
 		// WHEN

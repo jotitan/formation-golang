@@ -20,6 +20,7 @@ Nous allons changer le mécanisme en utilisant des channels
 Voici les étapes : 
 * Générer un identifiant unique (uuid) lors de la création d'un worker
 * Lors de l'enregistrement du worker auprès du coordinateur, transmettre l'uuid
+* On peut également transmettre la capacité de traitement d'un worker (nombre de tache en parallèle)
 * Dans le status d'une tâche, permettre le stockage de l'identifiant du noeud qui le traite
 * Lors qu'un worker indique qu'une tâche est terminée (ou en erreur), transmettre l'uuid
 * Le status running n'est pas utilisé actuellement (car la tâche est envoyée immédiatement au worker) : voir pour intégrer ce statut

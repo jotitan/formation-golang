@@ -34,6 +34,16 @@ func TestRunServer(t *testing.T) {
 	startStopCoordinatorServer(t, nil, NewWorkerPool(nil), func(t *testing.T) {})
 }
 
+func TestStatus(t *testing.T) {
+	startStopCoordinatorServer(t, nil, NewWorkerPool(nil), func(t *testing.T) {
+		// WHEN
+		resp, _ := http.Get("http://localhost:9007/status")
+
+		// THEN
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+	})
+}
+
 func TestStatusOnlyGet(t *testing.T) {
 	startStopCoordinatorServer(t, nil, NewWorkerPool(nil), func(t *testing.T) {
 		// WHEN
@@ -172,7 +182,7 @@ func TestRegister(t *testing.T) {
 	manager := model.NewManager()
 	startStopCoordinatorServer(t, manager, NewWorkerPool(nil), func(t *testing.T) {
 		// WHEN
-		resp, _ := http.Post("http://localhost:9007/register", "application/json", strings.NewReader("{\"url\":\"http://localhost:9008\",\"uuid\":\"uuid_test_1\"}"))
+		resp, _ := http.Post("http://localhost:9007/register", "application/json", strings.NewReader("{\"url\":\"http://localhost:9008\",\"capacity\":2,\"uuid\":\"uuid_test_1\"}"))
 
 		// THEN
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
