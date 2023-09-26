@@ -1,29 +1,30 @@
-# Atelier 4
-### Gestion des tests
+# Workshop 4
+### Test management
 
-#### Objectifs
+#### Objectives
 
-* Simplifier l'écriture de test unitaire avec testify
-* Ecrire des tests de qualité
+* Simplify unit test writing with testify
+* Write quality tests
 
-#### Etapes
+#### Steps
 
-Les tests qui ont été utilisés actuellement sont très compliqués à lire, maintenir et débugger.
-Une bonne pratique est de se contraindre à utiliser le schéma [Given-When-Then](https://martinfowler.com/bliki/GivenWhenThen.html) et à ajouter des fonctions de test. 
+The tests that have been used currently are very complicated to read, maintain and debug. 
 
-[Testify](https://github.com/stretchr/testify) est un framework d'assertions / mock permettant de simplifier l'écriture des tests
+A good practice is to force yourself to use the diagram [Given-When-Then](https://martinfowler.com/bliki/GivenWhenThen.html) and add functions to the test. 
 
-* Ajouter la dépendance _github.com/stretchr/testify_
-* Modifier la fonction de test TestManager pour utiliser la librairie d'assertion testify
-* Refactorer les tests pour respecter le principe Given-When-Then
-* Faire un test unitaire pour tester automatiquement que de la réduction de la photo **/resources/photo_test.jpg** fonctionne
+[Testify](https://github.com/stretchr/testify) is an assertions/mock framework to simplify the writing of tests
 
-#### Aide
+* Add the dependency _github.com/stretchr/testify_
+* Modify the test function of TestManager to use the library testify
+* Refactor the test to respect tje Given-When-Then principle
+* Write a unit test to automatically test that the downsizing of the photo **/resources/photo_test.jpg** works
 
-* Pour structurer un code, on le découpe en 3 parties : 
-  * GIVEN : les conditions de départ
-  * WHEN : l'action que l'on effectue
-  * THEN : les résultats que l'on attend
-* [Créer un répertoire temporaire](https://pkg.go.dev/io/ioutil#TempDir)
-* [Lire le contenu d'un fichier](https://pkg.go.dev/io/ioutil#ReadFile)
-* Pour vérifier qu'une photo a été réduite, faite simple, comparez le poids de l'image avant / après
+#### Help
+
+* To structure a code, we divide it into 3 parts : 
+  * GIVEN : initial conditions
+  * WHEN : the action we perform
+  * THEN : expected results
+* [Create a temporary directory](https://pkg.go.dev/io/ioutil#TempDir)
+* [Read the contents of a file](https://pkg.go.dev/io/ioutil#ReadFile)
+* To check that a photo has been reduced, compare the weight of the image before / after

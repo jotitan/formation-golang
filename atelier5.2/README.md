@@ -1,18 +1,18 @@
-# Atelier 5.2
-### Créer une API REST avec la librairie Gin
+# Workshop 5.2
+### Create a REST API with the GIN library
 
-#### Objectifs
+#### Objectives
 
-* Savoir utiliser la librairie Gin Gonic pour simplifier le développement d'API Rest
+* Know how to use the GIN Gonic library to simplify Rest API development
 
-#### Etapes
+#### Steps
 
-Supprimer toutes dépendances à la librairie standard pour utiliser la librairie GIN
+Remove all dependencies on the standard library to use the GIN library
 
-#### Aide
+#### Help
 
-* [Librairie GIN](github.com/gin-gonic/gin) à ajouter
-* Vous pouvez garder le wrapServer et changer uniquement le handler par celui de Gin
-* Pour créer un endpoint avec un paramètre dans l'url, la syntaxte est : "/tasks/:id"
-* Pour renvoyer une erreur avec un code http particulier, la fonction **AbortWithError** vous aidera
-* Pour gérer correctement les erreurs 405 (méthode non autorisée), configurer la propriété **HandleMethodNotAllowed** de l'engine à true
+* [GIN Library](github.com/gin-gonic/gin) to add
+* You can keep the wrapServer and only change the handler to that of Gin
+* To create an endpoint with a parameter in the url, the syntax is: "/tasks/:id"
+* To return an error with a particular http code, the **AbortWithError** function will help you
+* To properly handle 405 (method not allowed) errors, configure the **HandleMethodNotAllowed** property of the engine to true

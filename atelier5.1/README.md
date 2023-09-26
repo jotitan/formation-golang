@@ -1,26 +1,26 @@
-# Atelier 5.1
-### Connecter le coordinateur au(x) worker(s)
+# Workshop 5.1
+### Connect the coordinator to the worker(s)
 
-#### Objectifs
+#### Objectives
 
-* Savoir gérer un pool de server
+* Know how to manage a server pool
 
-#### Etapes
+#### Steps
 
-Le coordinateur va recevoir des requêtes et les déléguer à un pool de worker. 
-Voici les différentes étapes
+The coordinator will receive requests and delegate them to a pool of workers.
+Here are the different steps
 
-- Lorsqu'un worker se connecte, il connaît l'url du coordinateur et s'y connecte
-- Lorsqu'une tâche est reçue, le coordinateur va la déléguer à un des workers connectés
-- Lorsque le worker a fini la tâche, il va notifier le coordinateur
+- When a worker connects, it knows the coordinator's URL and connects to it
+- When a task is received, the coordinator will delegate it to one of the connected workers
+- When the worker has finished the task, it will notify the coordinator
 
-Le code à ajouter : 
-- Sur le coordinateur, ajouter une route _POST_ **/register** où le worker indique son url
-- Implémenter une version simple du pool worker pour exécuter une tâche (pas toujours le même worker)
-  - L'interface **TaskSenderToWorker** permet de décorréler la gestion du pool de l'action d'envoi (notamment pour mocker) 
-  - Lors du démarrage d'un worker, s'enregistrer auprès du coordinateur
-  - Modifier le test TestCompleteChain afin de tester la chaine : lancement du coordinateur, du worker et ajout d'une tache print jusqu'à la notification
+The code to add : 
+- On the coordinator, add a _POST_ **/register** route where the worker indicates its url
+- Implement a simple version of the pool worker to execute a task (not always the same worker)
+  - The **TaskSenderToWorker** interface allows you to decorrelate pool management from the sending action (notably for mocking)
+  - When starting a worker, register with the coordinator
+  - Modify the TestCompleteChain test in order to test the chain: launching the coordinator, the worker and adding a print task until the notification
 
-#### Aide
+#### Help
 
-* Pour trier une liste : sort.Slice
+* To sort a list : sort.Slice

@@ -1,14 +1,12 @@
-# Atelier 7
-### Erreurs et logs 
+# Workshop 7
+### Errors and logs 
 
-**Branche Atelier 7**
+**Branch workshop 7**
 
-#### Objectifs
+#### Objectives
 
-* Apprendre à gérer les erreurs
+* Learn to handle errors
 
-#### Etapes
+#### Steps
 
-Ajouter la gestion _des erreurs_ lors du traitement de l’image et générer _des logs_ applicatives lors des traitements
-
-#### Aide
+Add _error_ management during image processing and generate _application logs_ during processing

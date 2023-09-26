@@ -1,38 +1,39 @@
-# Formation Golang
+# Golang Training
 
-### Orgnisation des ateliers
+### Organization of workshops
 
-Il faut réaliser 7 ateliers se trouvant chacun dans un répertoire.
-Chaque atelier répertoire contient la correction du précédent atelier.
+You must carry out 7 workshops, each located in a directory.
+Every workshop directory contains the solution to the previous one.
 
-* [Atelier 1](atelier1/README.md)
-* [Atelier 2](atelier2.0/README.md) : cet atelier se fait en deux parties. La seconde est [2.1](atelier2.1/README.md) 
-* [Atelier 3](atelier3/README.md)
-* [Atelier 4](atelier4/README.md)
-* [Atelier 5](atelier5.0/README.md)
-* [Atelier 6](atelier6/README.md)
-* [Atelier 7](atelier7/README.md)
+* [Workshop 1](atelier1/README.md)
+* [Workshop 2](atelier2.0/README.md) : this workshop is done in two parts. The second one is [2.1](atelier2.1/README.md) 
+* [Workshop 3](atelier3/README.md)
+* [Workshop 4](atelier4/README.md)
+* [Workshop 5](atelier5.0/README.md)
+* [Workshop 6](atelier6/README.md)
+* [Workshop 7](atelier7/README.md)
 
-### Projet
+### Project
 
-L'objectif de projet est d'exécuter des tâches diverses par le biais d'un serveur qui va distribuer ces tâches.
-La distribution des tâches sera assez basique (round robin)
+The purpose of this project is to execute different tasks through a server that will distribute them. 
+The distribution of the tasks is pretty basic (round robin).
 
-Les tâches : 
-* Redimensionner une image
-* Afficher un hello world avec le prénom de l'utilisateur
-* Tâche fictive qui met un temps aléatoire à s'exécuter
+
+The tasks : 
+* Resizing an image
+* Dsiplay a hello world with the name of the user
+* Fake task that takes a random amount of time to execute
 
 ```mermaid
 
 flowchart LR;
 
-subgraph atelier
-    Coordinateur
-    Coordinateur--"Execute tache"-->Executor1
-    Coordinateur--"Execute tache"-->Executor2
+subgraph workshop
+    Coordinator
+    Coordinator--"Execute task"-->Executor1
+    Coordinator--"Execute task"-->Executor2
 end
 
-User--"Envoie tache"-->Coordinateur
+User--"Sends task"-->Coordinator
 
 ```

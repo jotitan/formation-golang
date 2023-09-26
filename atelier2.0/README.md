@@ -1,48 +1,49 @@
-# Atelier 2.0
-### Structure de données et interface
+# Workshop 2.0
+### Data structure and interface
 
-#### Objectifs
+#### Objectives
 
-* Initialiser un projet avec des modules
-* Modéliser les structure de données pour permettre le redimensionnement d'image
-* Utiliser des interfaces pour représenter une tâche pouvant s'exécuter
+* Initialize a project with modules
+* Model data structures to enable image resizing
+* Use interfaces to represent a task that can be executed
 
-Cet atelier se fait en deux étapes : atelier2.0 et atelier2.1
+This workshop is done in two steps : workshop2.0 et workshop2.1
 
-#### Etape 1 => Répertoire atelier2.0
+#### Step 1 => Directory workshop2.0
 
-##### Gestion des tâches
+##### Task management
 
-* Initialiser les modules avec comme nom de projet "formation-go"
-* Modifier l'exemple de l'atelier 1 pour utiliser le package **logger** et lancer le test newgopher_test.go
-* Dans le package model qui contient les structures utiles
-  * L'interface Task représente une tâche à exécuter : lui ajouter une méthode **Do()**
-  * Ajouter à la structure Print un champ message
-  * Implémenter les méthodes nécessaires pour que **Print** soit une **Task**
-  * Ajouter à la structure resize les champs nécessaires : 
-    * largeur
-    * longueur
-    * chemin de l'image source
-    * chemin de l'image destination
-  * Implémenter dans Resize la méthode **Do()** afin de respecter l'interface Task.
-  L'implémentation sera basique et affichera juste un message avec le logger :  "Run resize from, to, height, width". 
+* Initialize the modules with project name "formation-go"
+* Modify the example of workshop 1 to use the **logger** package and launch the test newgopher_test.go
+* In the model package which contains the useful structures
+  * The Task interface represents a task to execute : add to it the method **Do()**
+  * Add to the Print structure a Message field
+  * Implement the necessary methods for **Print** to be a **Task**
+  * Add to the Resizze structure the necessary fields :
+    * width
+    * length
+    * path to the source image
+    * path to the target destination
+  * Implement in Resize the method **Do()** in order to respect the Task interface.
+  The implementation will be basic and will only display a message with the logger : "Run resize from, to, height, width".
+  
   _Exemple "Run resize img.jpg img2.jpg 400px 200px"_
-  * Lancer les tests tasks_test.go
+  * Launch the tests tasks_test.go
 
-##### Manipulation de tableau
-* Implémenter les méthodes de la structure Taskmanager
-* Lancer le test taskmanager_test.go
+##### Table manipulation
+* Implement the methods of the structure Taskmanager
+* launch the test taskmanager_test.go
 
-#### Aide
-* Initialiser les modules dans un projet (dans le répertoire src)
+#### Help
+* Initializing the modules in a project (in the src directory)
 ```bash
 go mod init project_name 
 ```
-* Lancer un test : se mettre dans le répertoire et 
+* Launch a test : change path to be in the directory and launch : 
  ```bash
  go test
  ```
 
-* [reflect.TypeOf()](https://pkg.go.dev/reflect#TypeOf) permet de connaître le type d'une structure. (méthode Name pour le nom)
-* Pour ne pas exposer le détail d'une tache, on peut créer une fonction qui créée la tâche, NewPrint par exemple, et on change la visibilité de Print
-* Pour rappel, quand le nom d'une structure commence par une majuscule, elle est publique, sinon privée
+* [reflect.TypeOf()](https://pkg.go.dev/reflect#TypeOf) allows you to know the type of a structure. (method Name for the name)
+* To avoid exposing the detail of a task, we can create a function which creates the task, NewPrint for example, and we change the visibility of Print
+* As a reminder, when the name of a structure begins with a capital letter, it is public, otherwise private

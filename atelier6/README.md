@@ -1,34 +1,34 @@
-# Atelier 6
-### Gestion de la concurrence
+# Workshop 6
+### Concurrency management
 
-**Branche Atelier 6**
+**Branch Workshop 6**
 
-#### Objectifs
+#### Objectives
 
-* _Distribuer_ nos tâches sur plusieurs instances et les appeler intelligemment.
-* _Sécuriser_ l’usage en gérant un timeout
+* _Distribute_ our tasks across multiple instances and call them intelligently.
+* _Secure_ usage by managing a timeout
 
-#### Etapes
+#### Steps
 
-Actuellement, le coordinateur n'est pas très intelligent : quand il reçoit une tâche, il la dispatche immédiatement à un worker.
-Ce mécanisme, le round robin, a plusieurs inconvénients : 
-* Il ne prend pas en compte la capacité de traitement du worker
-* Il n'est pas possible de limiter le nombre de requêtes sur un worker
+Currently, the coordinator is not very intelligent: when he receives a task, he immediately dispatches it to a worker.
+This mechanism, the round robin, has several disadvantages:
+* It does not take into account the processing capacity of the worker
+* It is not possible to limit the number of requests on a worker
 
-Nous allons changer le mécanisme en utilisant des channels
+We are going to change the mecanism by using channels
 
-Voici les étapes : 
-* Générer un identifiant unique (uuid) lors de la création d'un worker
-* Lors de l'enregistrement du worker auprès du coordinateur, transmettre l'uuid
-* On peut également transmettre la capacité de traitement d'un worker (nombre de tache en parallèle)
-* Dans le status d'une tâche, permettre le stockage de l'identifiant du noeud qui le traite
-* Lors qu'un worker indique qu'une tâche est terminée (ou en erreur), transmettre l'uuid
-* Le status running n'est pas utilisé actuellement (car la tâche est envoyée immédiatement au worker) : voir pour intégrer ce statut
-* Il va falloir faire en sorte que le taskManager et le PoolWorker communique entre eux. Ajouter des tests.
+These are the steps : 
+* Generate a unique id (uuid) during the worker creation
+* When registering the worker with the coordinator, transmit the uuid
+* We can also transmit the processing capacity of a worker (number of tasks in parallel)
+* In the status of a task, allow the storage of the identifier of the node which processes it
+* When a worker indicates that a task is completed (or in error), pass the uuid
+* The running status is not currently used (because the task is sent immediately to the worker): see how to integrate this status
+* We will have to ensure that the taskManager and the PoolWorker communicate with each other. Add tests.
 
-#### Aide
+#### Help
 
-* Pour générer un UUID, la librairie de [google](github.com/google/uuid) est facile à utiliser
-* Rappel sur les channels : 
-  * Pour limiter les appels en parallèle, on peut utiliser un channel avec une taille correspondant au nombre de tâches en parallèle
-  * Pour échanger des données de manière threadsafe, le channel est idéal
+* To generate a uuid, the [google library](github.com/google/uuid) is easy to use
+* Reminders about channels : 
+  * The limit the number of parallel calls, we can use a channel with a size corresponding to the number of parallel tasks
+  * To exchange data in a threadsafe manner, the channel is an ideal solution

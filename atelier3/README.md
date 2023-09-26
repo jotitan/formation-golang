@@ -1,17 +1,17 @@
-# Atelier 3
-### Utilisation d'une librairie externe
+# Workshop 3
+### Using an external library
 
-#### Objectifs
+#### Objectives
 
-* Utilisation d'une librairie externe pour redimensionner nos images
-* Savoir utiliser go mod
+* Using an external library to resize our images
+* Know how to use go mod
 
-#### Etapes
+#### Steps
 
-* Ajouter la dépendance _github.com/nfnt/resize_
-* Appeler [la librairie de redimensionnement](https://github.com/nfnt/resize) d'image dans resize_image.go
-* Modifier fonction **Do** de Resize pour utiliser cette implémentation
-* Tester la fonction Resize à partir du main
+* Add the dependency _github.com/nfnt/resize_
+* Call [the resizing library](https://github.com/nfnt/resize) of images in resize_image.go
+* Modify the function **Do** of Resize to use this implementation
+* Test the function Resize from the main method
 
-#### Aide
+#### Help
 * [Go module](https://go.dev/ref/mod#go-get)

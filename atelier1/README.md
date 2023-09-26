@@ -1,27 +1,27 @@
-# Atelier 1
-### Création de projet
+# Workshop 1
+### Creating the project
 
-#### Objectifs
+#### Objectives
 
-* Créer une première fonction qui va afficher le texte  _"I am a new Gopher"_
+* Create a first function that will display the text   _"I am a new Gopher"_
 
-#### Etapes
+#### Steps
 
-**Branche atelier1**
+**Branch workshop1**
 
-* Créer un package main
-* Créer un fichier avec une fonction main
-* Lancer le code avec go run
-* Builder le code avec go build et le lancer en ligne de commande
+* Create a main package
+* Create a file with a main function
+* Launch the code with go run
+* Build the code with go build and launch it in the command line
 
-#### Aide
+#### Help
 
-* Executer du code :
+* Execute code :
 ```bash
 go run monfichier.go
 ```
 
-* Builder du code :
+* Build code :
 ```bash
 go build -o myexecutable monfichier.go
 ```

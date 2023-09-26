@@ -1,22 +1,22 @@
-# Atelier 5
-### Créer une API REST
+# Workshop 5
+### Create a REST API
 
-#### Objectifs
+#### Objectives
 
-* Savoir créer et appeler des API Rest avec l'API standard (atelier 5.0)
-* Savoir utiliser la librairie Gin Gonic pour simplifier le développement d'API Rest (Atelier 5.2)
+* Know how to create and call Rest APIs with the standard API (workshop 5.0)
+* Know how to use the Gin Gonic library to simplify the development of Rest API (Workshop 5.2)
 
-#### Etapes
+#### Steps
 
-Nous allons écrire deux APIS : 
-* La première sera un coordinateur qui va seulement recevoir des tâches et les distribuer
-* La seconde API sera un worker / unité de traitement qui exécutera les tâches
+We will write two APIs : 
+* The first will be a coordinator who will only receive tasks and distribute them
+* The second API will be a worker / processing unit which will execute the tasks
 
-L'objectif est de pouvoir exécuter les tâches sur plusieurs worker afin de répartir facilement la charge.
+The objective is to be able to execute tasks on several workers in order to easily distribute the load.
 
-La communication entre le coordinateur et le(s) worker(s) se fera dans l'atelier 5.1
+Communication between the coordinator and the worker(s) will take place in workshop 5.1
 
-##### Schéma
+##### Diagram
 
 ```mermaid
     flowchart LR;
@@ -39,40 +39,40 @@ La communication entre le coordinateur et le(s) worker(s) se fera dans l'atelier
     end
 ```
 
-- **Premier pas**
-  - Créer un serveur de base qui se lance sur le port 9007
-  - Ajouter une route **/status** qui renvoie juste "up"
-  - Modifier la fonction pour n'accepter que les requêtes GET, en revoyant une 405
+- **First steps**
+  - Create a basic server that launches on port 9007
+  - Add a **/status** route that just returns "up"
+  - Change the function to only accept GET requests, returning a 405
 
-- **Pour recevoir les demandes globales (coordinateur)**
-  - Ajouter une route _POST_ **/task** pour pouvoir ajouter une tâche avec les champs : 
-    - type : type de tâche (print ou resize)
-    - les champs liés au type (message pour print par exemple)
-    L'API renvoie une 201 si tout se passe bien, ainsi que l'id de la tâche, une erreur 400 sinon
-  - Ajouter une route _GET_ **/tasks** pour lister les tâches : l'id, le type et l'état de la tâche
-  - Ajouter une route _GET_ **/tasks/:id** pour avoir le détail d'une tâche : 
-    - Attention, le task manager ne permet pas encore de retourner une tâche, à vous de l'ajouter :)
-  - Ajouter une route _POST_ **/tasks/:id** pour mettre à jour le statut d'une tâche : 
-    - Le statut peut-être "error" ou "finish"
-    - Actuellement, le task manager ne sais pas gérer le statut, à vous de trouver une solution :)
+- **To receive global requests (coordinator)**
+  - Add a _POST_ **/task** route to be able to add a task with the fields:
+    - type : task type (print or resize)
+    - fields linked to the type (message for print for example)
+      The API returns a 201 if everything goes well, as well as the task id, a 400 error otherwise
+  - Add a _GET_ **/tasks** route to list tasks: task id, type and status
+  - Add a _GET_ **/tasks/:id** route to have the details of a task:
+    - Please note, the task manager does not yet allow you to return a task, it's up to you to add it :)
+  - Add a _POST_ **/tasks/:id** route to update the status of a task:
+    - The status can be "error" or "finish"
+    - Currently, the task manager does not know how to manage the status, it's up to you to find a solution :)
 
-- **Pour recevoir une tâche et l'exécuter (worker)**
-  - Créer un nouveau serveur qui se lance sur un port au choix
-  - Ajouter une route **/status** qui renvoie juste "up"
-  - Ajouter une route _POST_ **/task** qui exécute la tâche reçue
-    - Lorsque la tâche est réalisée, une requête _POST_ est faite sur le coordinateur : /tasks/:id avec le statut (error ou finish)
+- **To receive a task and execute it (worker)**
+  - Create a new server that launches on a port of your choice
+  - Add a **/status** route that just returns "up"
+  - Add a _POST_ **/task** route that executes the received task
+    - When the task is completed, a _POST_ request is made to the coordinator: /tasks/:id with the status (error or finish)
     
-- **Connecter les appels entre le coordinateur et le ou les workers**
+- **Connect calls between coordinator and worker(s)**
 
-#### Aide
+#### Help
 
-* Pour créer un serveur en Go, [la page d'aide](https://pkg.go.dev/net/http)
-* Pour convertir des données en json, vous pouvez utiliser la [bibliothèque json](https://pkg.go.dev/encoding/json)
-  * [json.Marshall](https://pkg.go.dev/encoding/json#Marshal) pour sérialiser et [json.Unmarshall](https://pkg.go.dev/encoding/json#Unmarshal) pour désérialiser
-  * Les "struct field's tag" permettent de personnaliser le nom des champs lors de la sérialisation
-  * / ! \ Seuls les champs publics sont sérialisés
+* To create a server in Go, check [the help page](https://pkg.go.dev/net/http)
+* To convert data to json you can use [json library](https://pkg.go.dev/encoding/json)
+  * [json.Marshall](https://pkg.go.dev/encoding/json#Marshal) to serialize and [json.Unmarshall](https://pkg.go.dev/encoding/json#Unmarshal) to deserialize
+  * The "struct field's tag" allows you to customize the name of the fields during serialization
+  * / ! \ Only public fields are serialized
 
-#### Amélioration
+#### Improvement
 
-L'implémentation du task manager utilise une liste : ce n'est pas efficace pour la suppression ou pour trouver une tâche.
-Peut-être qu'une implémentation à base d'une map serait plus efficace
+The task manager implementation uses a list: this is not efficient for deleting or finding a task.
+Maybe a map-based implementation would be more efficient.

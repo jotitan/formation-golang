@@ -1,22 +1,22 @@
-# Atelier 2.1
-### Structure de données et interface
+# Workshop 2.1
+### Data structure and interface
 
-#### Objectifs
+#### Objectives
 
-* Refactorer du code
+* Refactoring code
 
-Le code que nous avons écrit est bien mais il expose trop l'implémentation de nos tâches alors que nous souhaiterions dissimuler cela.  
-Nous allons également ajouter la notion de suppression de tâche au taskmanager.
+The code we wrote is good but it exposes too much of the implementation of our tasks when we would like to hide that.
+We will also add the notion of task deletion to the taskmanager.
 
-* Expliquer l'intérêt de la méthode NextId du manager et l'implémenter.
-* Implémenter la méthode Remove du TaskManager et lancer les tests de taskmanager_test.go
-* Modifier les tâches Print et Resize pour ne pas exposer l'implémentation
+* Explain the benefit of the manager's NextId method and implement it.
+* Implement the TaskManager's Remove method and run the taskmanager_test.go tests
+* Modify Print and Resize tasks to not expose the implementation
 
 
-#### Aide
-* Initialiser les modules dans un projet
+#### Help
+* Initializing the modules in a project
 ```bash
 go mod init project_name 
 ```
-* Pour ne pas exposer le détail d'une tache, on peut créer une fonction qui créée la tâche, NewPrint par exemple, et on change la visibilité de Print
-* Pour rappel, quand le nom d'une structure commence par une majuscule, elle est publique, sinon privée
+* To avoid exposing the detail of a task, we can create a function which creates the task, NewPrint for example, and we change the visibility of Print
+* As a reminder, when the name of a structure begins with a capital letter, it is public, otherwise private
