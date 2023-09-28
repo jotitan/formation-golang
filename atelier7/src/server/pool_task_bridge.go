@@ -6,7 +6,7 @@ import (
 	"formation-go/model"
 )
 
-var sender TaskSenderToWorker = LaunchTask{}
+//var sender TaskSenderToWorker = LaunchTask{}
 
 type requestLimiter chan struct{}
 
@@ -22,6 +22,7 @@ type runningWorker struct {
 	uuid    string
 	url     string
 	limiter requestLimiter
+	sender  TaskSenderToWorker
 }
 
 func (running *runningWorker) start(tasks chan model.Task) {
@@ -37,7 +38,7 @@ func (running *runningWorker) start(tasks chan model.Task) {
 }
 
 func (running *runningWorker) runTask(task model.Task) error {
-	err := sender.Send(task, running.url)
+	err := running.sender.Send(task, running.url)
 	if err != nil {
 		// Free limiter
 		running.limiter.release()
@@ -49,12 +50,14 @@ func (running *runningWorker) runTask(task model.Task) error {
 //BridgePoolTask is a bridge which made link between task and the pool of workers to execute
 type BridgePoolTask struct {
 	runningWorkers map[string]*runningWorker
+	sender         TaskSenderToWorker
 }
 
 func (bpt *BridgePoolTask) AddWorker(worker innerWorker, chanelTasks chan model.Task) {
 	running := &runningWorker{
 		uuid:    worker.uuid,
 		url:     worker.url,
+		sender:  bpt.sender,
 		limiter: make(chan struct{}, worker.capacity),
 	}
 	bpt.runningWorkers[worker.uuid] = running

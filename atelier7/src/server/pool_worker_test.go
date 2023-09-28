@@ -4,6 +4,7 @@ import (
 	"formation-go/model"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestAddWorker(t *testing.T) {
@@ -53,6 +54,8 @@ func TestSendTask(t *testing.T) {
 	// WHEN
 	pool.Execute(model.NewPrint("Vers l'infini et au dela", 1))
 
+	// Wait chanel works
+	time.Sleep(500 * time.Millisecond)
 	// THEN
 	assert.Equal(t, "url1", sender.store[1])
 }

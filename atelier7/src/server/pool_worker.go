@@ -43,7 +43,7 @@ func NewWorkerPool(sender TaskSenderToWorker) *PoolWorker {
 	return &PoolWorker{
 		workers:     make(map[string]innerWorker),
 		sender:      sender,
-		poolBridge:  BridgePoolTask{make(map[string]*runningWorker)},
+		poolBridge:  BridgePoolTask{make(map[string]*runningWorker), sender},
 		chanelTasks: make(chan model.Task, 10),
 		lastWorker:  -1,
 	}
@@ -94,7 +94,7 @@ func (pw *PoolWorker) nextWorker() innerWorker {
 
 func (pw *PoolWorker) Execute(task model.Task) error {
 	if pw.Size() == 0 {
-		return errors.New("now worker in the pool")
+		return errors.New("no worker in the pool")
 	}
 	pw.chanelTasks <- task
 	return nil
