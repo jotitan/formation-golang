@@ -33,3 +33,21 @@ func TestResize(t *testing.T) {
 	messageToFind := "Run resize /home/photo.jpg, /home/photo_resize.jpg, 600px, 400px"
 	assert.True(t, logger.Log.CheckMessage(messageToFind), "Must find message")
 }
+
+func TestRealResize(t *testing.T) {
+	folder, _ := os.MkdirTemp("", "resize")
+	resize := resize{
+		height:     600,
+		width:      400,
+		originPath: filepath.Join("resources", "photo_test.jpg"),
+		targetPath: filepath.Join(folder, "output_image.jpeg"),
+	}
+	if !resize.Do() {
+		t.Error("Must resize image")
+	}
+	testFile, err := os.Open(filepath.Join(folder, "output_image.jpeg"))
+	defer testFile.Close()
+	if err != nil {
+		t.Error("Image is missing")
+	}
+}

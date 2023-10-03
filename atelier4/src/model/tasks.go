@@ -3,6 +3,9 @@ package model
 import (
 	"fmt"
 	"formation-go/logger"
+	resizelib "github.com/nfnt/resize"
+	"image/jpeg"
+	"os"
 )
 
 type Task interface {
@@ -28,11 +31,27 @@ func NewResize(originalPath, targetPath string, height, width, id int) Task {
 }
 
 func (r resize) Do() bool {
+	input, err := os.Open(r.originPath)
+	if err != nil {
+		return false
+	}
+	defer input.Close()
+	img, err := jpeg.Decode(input)
+	if err != nil {
+		return false
+	}
+	resizeImage := resizelib.Resize(uint(r.width), uint(r.height), img, resizelib.Bicubic)
+	output, err := os.OpenFile(r.targetPath, os.O_TRUNC|os.O_CREATE|os.O_RDWR, os.ModePerm)
+	if err != nil {
+		return false
+	}
+	defer output.Close()
+
 	logger.Log.Println(fmt.Sprintf("Run resize %s, %s, %dpx, %dpx", r.originPath, r.targetPath, r.height, r.width))
-	return true
+	return jpeg.Encode(output, resizeImage, nil) == nil
 }
 
-//Id return unique id of task
+// Id return unique id of task
 func (r resize) Id() int {
 	return r.uuid
 }
@@ -54,7 +73,7 @@ func (p print) Do() bool {
 	return true
 }
 
-//Id return unique id of task
+// Id return unique id of task
 func (p print) Id() int {
 	return p.uuid
 }
