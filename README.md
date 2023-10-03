@@ -2,6 +2,8 @@
 
 ### Orgnisation des ateliers
 
+Une version anglaise est [disponible](README_en.md).
+
 Il faut réaliser 7 ateliers se trouvant chacun dans un répertoire.
 Chaque atelier répertoire contient la correction du précédent atelier.
 
